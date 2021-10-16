@@ -133,4 +133,4 @@ async def on_message(message):  # 有訊息時
         log_file.close()
 
 
-client.run("ODU4MTcwNDQ4OTM2MzA0NjYw.YNaPgw.xG3Xo8jR_qeVoOn1ondRoeM8zDQ")
+client.run("TOKEN_HERE")
