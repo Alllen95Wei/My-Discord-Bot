@@ -19,8 +19,8 @@ async def on_ready():
 @client.event
 async def on_message(message):  # 有訊息時
     global final_msg
-    localtime = time.localtime()
-    timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", localtime)
+    local_time = time.localtime()
+    timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
     if message.author == client.user:  # 排除自己的訊息，避免陷入無限循環
         return
     msg_in = message.content
@@ -123,8 +123,8 @@ async def on_message(message):  # 有訊息時
             cfz.check_size()
         else:
             final_msg = "參數似乎無效...\n輸入`a!help`獲得說明"
-        localtime = time.localtime()
-        timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", localtime)
+        local_time = time.localtime()
+        timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
         new_log = "[" + timestamp + "]" + str(client.user) + ":\n" + final_msg + "\n\n"
         print(new_log, end="")
         log_file.write(new_log)
