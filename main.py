@@ -23,7 +23,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):  # 有訊息時
-    global final_msg
+    global final_msg, msg_author
     local_time = time.localtime()
     timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
     if message.author == client.user:  # 排除自己的訊息，避免陷入無限循環
@@ -49,7 +49,8 @@ async def on_message(message):  # 有訊息時
                         "`random <範圍>`：在指定數字範圍隨機取得一數\n" \
                         "`qrcode <文字>`：將輸入的文字轉換為QR Code\n" \
                         "`daily901 <new/channel/fb>`：得到關於「日常901」的資訊\n" \
-                        "`rickroll`：？？？" \
+                        "`rickroll`：？？？\n" \
+                        "`sizecheck`：檢查\"C:\\MusicBot\\audio_cache\"的大小。當大小超過1000000000位元組時，清空該資料夾。" \
                         "\n想得到更詳細的指令參數說明，直接輸入指令而不加參數即可\n試試看吧！"
         elif msg_in[2:5] == "ama":
             final_msg = "```本指令開發中，敬請期待！```"
@@ -125,7 +126,13 @@ async def on_message(message):  # 有訊息時
                         "down~\nhttps://www.youtube.com/watch?v=dQw4w9WgXcQ " + "\n\n" \
                                                                                 "Lyrics：\n" + lyrics
         elif msg_in[2:11] == "sizecheck":
-            final_msg = cfz.check_size()
+            msg_author = message.author
+            final_msg = "請確認Allen Music Bot已經停止運作。輸入`ap!y`以執行。"
+        elif msg_in[2:3] == "y":
+            if message.author == msg_author:
+                final_msg = cfz.check_size()
+            else:
+                final_msg = "此回覆無效。"
         else:
             final_msg = "參數似乎無效...\n輸入`a!help`獲得說明"
         local_time = time.localtime()
