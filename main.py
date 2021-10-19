@@ -12,13 +12,13 @@ localtime = time.localtime()
 async def on_ready():
     game = discord.Activity(type=discord.ActivityType.listening, name="YOASOBI is soooooooo great")
     # discord.Status.<狀態>，可以是online,offline,idle,dnd,invisible
-    await client.change_presence(status=discord.Status.online, activity=game)
-    log_file = open("log.txt", mode="a")  # new
+    await client.change_presence(status=discord.Status.dnd, activity=game)
+    log_file = open("log.txt", mode="a")
     print("登入成功！\n目前登入身份：", client.user)
     print("\n以下為使用紀錄(只要開頭訊息有\"a!\"，則這則訊息和系統回應皆會被記錄)：")
-    timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", localtime)  # new
-    login_log = "[" + timestamp + "]" + "登入成功！"  # new
-    # new
+    timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", localtime)
+    login_log = "[" + timestamp + "]" + "登入成功！"
+    log_file.write(login_log)
 
 
 @client.event
