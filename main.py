@@ -1,7 +1,9 @@
+import os
 import time
 from random import randint
 import discord
 import check_folder_size as cfz
+from dotenv import load_dotenv
 
 client = discord.Client()
 localtime = time.localtime()
@@ -123,7 +125,7 @@ async def on_message(message):  # 有訊息時
                         "down~\nhttps://www.youtube.com/watch?v=dQw4w9WgXcQ " + "\n\n" \
                                                                                 "Lyrics：\n" + lyrics
         elif msg_in[2:11] == "sizecheck":
-            cfz.check_size()
+            final_msg = cfz.check_size()
         else:
             final_msg = "參數似乎無效...\n輸入`a!help`獲得說明"
         local_time = time.localtime()
@@ -135,5 +137,7 @@ async def on_message(message):  # 有訊息時
         await message.channel.send(final_msg)
         log_file.close()
 
-
-client.run("TOKEN_HERE")
+env_path = "C:\\Users\\901\\PycharmProjects\\Discord Bot\\TOKEN.env"
+load_dotenv(dotenv_path=env_path)
+TOKEN = os.getenv("TOKEN")
+client.run(TOKEN)
