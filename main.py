@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 client = discord.Client()
 localtime = time.localtime()
 
+
 @client.event
 async def on_ready():
     game = discord.Activity(type=discord.ActivityType.listening, name="YOASOBI is soooooooo great")
@@ -21,9 +22,13 @@ async def on_ready():
     log_file.write(login_log)
 
 
+final_msg = ""
+msg_author = ""
+
+
 @client.event
 async def on_message(message):  # 有訊息時
-    global final_msg, msg_author
+    global final_msg, final_msg, msg_author
     local_time = time.localtime()
     timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
     if message.author == client.user:  # 排除自己的訊息，避免陷入無限循環
@@ -127,9 +132,10 @@ async def on_message(message):  # 有訊息時
                                                                                 "Lyrics：\n" + lyrics
         elif msg_in[2:11] == "sizecheck":
             msg_author = message.author
-            final_msg = "請確認Allen Music Bot已經停止運作。輸入`ap!y`以執行。"
+            final_msg = "請確認Allen Music Bot已經停止運作。輸入`a!y`以執行。"
         elif msg_in[2:3] == "y":
             if message.author == msg_author:
+                msg_author = ""
                 final_msg = cfz.check_size()
             else:
                 final_msg = "此回覆無效。"
@@ -143,6 +149,7 @@ async def on_message(message):  # 有訊息時
         await message.channel.send(message.author.mention)
         await message.channel.send(final_msg)
         log_file.close()
+
 
 # 取得TOKEN
 env_path = "C:\\Users\\901\\PycharmProjects\\Discord Bot\\TOKEN.env"
