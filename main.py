@@ -18,7 +18,7 @@ async def on_ready():
     print("登入成功！\n目前登入身份：", client.user)
     print("\n以下為使用紀錄(只要開頭訊息有\"a!\"，則這則訊息和系統回應皆會被記錄)：")
     timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", localtime)
-    login_log = "[" + timestamp + "]" + "登入成功！"
+    login_log = "[" + timestamp + "]" + "登入成功！\n"
     log_file.write(login_log)
 
 
