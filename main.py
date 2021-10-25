@@ -28,7 +28,7 @@ msg_author = ""
 
 @client.event
 async def on_message(message):  # 有訊息時
-    global final_msg, final_msg, msg_author
+    global final_msg, msg_author
     local_time = time.localtime()
     timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
     if message.author == client.user:  # 排除自己的訊息，避免陷入無限循環
@@ -133,6 +133,9 @@ async def on_message(message):  # 有訊息時
         elif msg_in[2:11] == "sizecheck":
             msg_author = message.author
             final_msg = "請確認Allen Music Bot已經停止運作。輸入`a!y`以執行。"
+        elif msg_in[2:8] == "runmsb":
+            os.system("C:\\MusicBot\\run.bat")
+            final_msg = "已嘗試執行Allen Music Bot。"
         elif msg_in[2:3] == "y":
             if message.author == msg_author:
                 msg_author = ""
@@ -152,7 +155,7 @@ async def on_message(message):  # 有訊息時
 
 
 # 取得TOKEN
-env_path = "C:\\Users\\901\\PycharmProjects\\Discord Bot\\TOKEN.env"
+env_path = "TOKEN.env"
 load_dotenv(dotenv_path=env_path)
 TOKEN = os.getenv("TOKEN")
 client.run(TOKEN)
