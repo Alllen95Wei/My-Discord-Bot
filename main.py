@@ -176,7 +176,7 @@ async def on_message(message):  # 有訊息時
 
 
 # 取得TOKEN
-env_path = "C:\\Users\\Allen\\PycharmProjects\\My-Discord-Bot\\TOKEN.env"
+env_path = "TOKEN.env"
 load_dotenv(dotenv_path=env_path)
 TOKEN = os.getenv("TOKEN")
 client.run(TOKEN)
