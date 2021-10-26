@@ -169,8 +169,8 @@ async def on_message(message):  # 有訊息時
             log_file = open("log.txt", mode="a")
             log_file.write(new_log)
             log_file.close()
-        except:
-            print("無法寫入記錄檔。")
+        except Exception as e:
+            print("無法寫入記錄檔。(" + e + ")")
         await message.channel.send(message.author.mention)
         await message.channel.send(final_msg)
 
