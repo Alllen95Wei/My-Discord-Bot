@@ -3,6 +3,7 @@ import time
 from random import randint
 import discord
 import check_folder_size as cfz
+import change_autoplaylist as catpl
 from dotenv import load_dotenv
 
 client = discord.Client()
@@ -55,7 +56,8 @@ async def on_message(message):  # 有訊息時
                         "`qrcode <文字>`：將輸入的文字轉換為QR Code\n" \
                         "`daily901 <new/channel/fb>`：得到關於「日常901」的資訊\n" \
                         "`rickroll`：？？？\n" \
-                        "`sizecheck`：檢查\"C:\\MusicBot\\audio_cache\"的大小。當大小超過1000000000位元組時，清空該資料夾。" \
+                        "`sizecheck`：檢查\"C:\\MusicBot\\audio_cache\"的大小；當大小超過1000000000位元組時，清空該資料夾\n" \
+                        "`changeatpl`：更換Allen Music Bot的自動播放清單" \
                         "\n想得到更詳細的指令參數說明，直接輸入指令而不加參數即可\n試試看吧！"
         elif msg_in[2:5] == "ama":
             final_msg = "```本指令開發中，敬請期待！```"
@@ -71,9 +73,8 @@ async def on_message(message):  # 有訊息時
                     "最好不要現在告訴你", "300 Multiple Choices", "去問瑪卡巴卡更快", "您撥的電話無人接聽，嘟聲後開始計費。", "對不起，您播的號碼是空號，請查明後再撥。")
 
                 ans_b = (
-                    "不可能", "否定的", "不值得", "等等等等", "No no no", "我拒絕", "我覺得不行耶", "https://cdn2.ettoday.net/images/4945"
-                                                                              "/4945172.jpg", "403 Forbidden",
-                    "這樣不好")
+                    "不可能", "否定的", "不值得", "等等等等", "No no no", "我拒絕", "我覺得不行耶", "https://cdn2.ettoday.net/images/4945/4945172.jpg",
+                    "403 Forbidden", "這樣不好")
 
                 ball_result1 = ans1[randint(0, 2)]
                 if ball_result1 == "g":
@@ -123,7 +124,6 @@ async def on_message(message):  # 有訊息時
                     final_msg = "日常901的頻道連結：https://www.youtube.com/channel/UCYo6tbHa4AxwStRqWWhaYhw"
                 if msg_in[11:13] == "fb":
                     final_msg = "鮑哥粉絲團的連結：https://fb.me/liyuan.baoge"
-
         elif msg_in[2:10] == "rickroll":
             openfile = open("Never gonna give you up lyrics.txt", mode="r")
             lyrics = openfile.read()
@@ -136,6 +136,16 @@ async def on_message(message):  # 有訊息時
         elif msg_in[2:8] == "runmsb":
             os.system("C:\\MusicBot\\run.bat")
             final_msg = "已嘗試執行Allen Music Bot。"
+        elif msg_in[2:12] == "changeatpl":
+            if msg_in[13:16] == "bgm":
+                catpl.change_atpl_to_bgm()
+                final_msg = "已嘗試將自動播放清單換為BGM。\n請將Allen Music Bot重新啟動，才會使變更生效。"
+            elif msg_in[13:19] == "normal":
+                catpl.change_atpl_to_normal()
+                final_msg = "已嘗試將自動播放清單換為原狀。\n請將Allen Music Bot重新啟動，才會使變更生效。"
+            else:
+                final_msg = "```參數：\nchangeatpl bgm：將Allen Music Bot的自動播放清單換為BGM playlist。\n" \
+                            "           normal：將Allen Music Bot的自動播放清單回歸原狀。```"
         elif msg_in[2:3] == "y":
             if message.author == msg_author:
                 msg_author = ""
