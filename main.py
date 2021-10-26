@@ -15,12 +15,16 @@ async def on_ready():
     game = discord.Activity(type=discord.ActivityType.listening, name="YOASOBI is soooooooo great")
     # discord.Status.<狀態>，可以是online,offline,idle,dnd,invisible
     await client.change_presence(status=discord.Status.dnd, activity=game)
-    log_file = open("log.txt", mode="a")
     print("登入成功！\n目前登入身份：", client.user)
     print("\n以下為使用紀錄(只要開頭訊息有\"a!\"，則這則訊息和系統回應皆會被記錄)：")
     timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", localtime)
-    login_log = "[" + timestamp + "]" + "登入成功！\n"
-    log_file.write(login_log)
+    try:
+        log_file = open("log.txt", mode="a")
+        login_log = "[" + timestamp + "]" + "登入成功！\n"
+        log_file.write(login_log)
+        log_file.close()
+    except Exception as e:
+        print(e)
 
 
 final_msg = ""
@@ -37,8 +41,11 @@ async def on_message(message):  # 有訊息時
     msg_in = message.content
     if msg_in[:2] == "a!":
         use_log = "[" + timestamp + "]" + str(message.author) + ":\n" + msg_in + "\n\n"
-        log_file = open("log.txt", mode="a")
-        log_file.write(use_log)
+        try:
+            log_file = open("log.txt", mode="a")
+            log_file.write(use_log)
+        except:
+            print("無法寫入記錄檔。")
         print(use_log, end="")
         if len(msg_in) == 2:
             final_msg = "我在這！\n如果需要指令協助，請輸入`a!help`"
@@ -158,14 +165,18 @@ async def on_message(message):  # 有訊息時
         timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
         new_log = "[" + timestamp + "]" + str(client.user) + ":\n" + final_msg + "\n\n"
         print(new_log, end="")
-        log_file.write(new_log)
+        try:
+            log_file = open("log.txt", mode="a")
+            log_file.write(new_log)
+            log_file.close()
+        except:
+            print("無法寫入記錄檔。")
         await message.channel.send(message.author.mention)
         await message.channel.send(final_msg)
-        log_file.close()
 
 
 # 取得TOKEN
-env_path = "TOKEN.env"
+env_path = "C:\\Users\\Allen\\PycharmProjects\\My-Discord-Bot\\TOKEN.env"
 load_dotenv(dotenv_path=env_path)
 TOKEN = os.getenv("TOKEN")
 client.run(TOKEN)
