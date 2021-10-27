@@ -138,21 +138,31 @@ async def on_message(message):  # 有訊息時
                         "down~\nhttps://www.youtube.com/watch?v=dQw4w9WgXcQ " + "\n\n" \
                                                                                 "Lyrics：\n" + lyrics
         elif msg_in[2:11] == "sizecheck":
-            msg_author = message.author
-            final_msg = "請確認Allen Music Bot已經停止運作。輸入`a!y`以執行。"
-        elif msg_in[2:8] == "runmsb":
-            os.system("C:\\MusicBot\\run.bat")
-            final_msg = "已嘗試執行Allen Music Bot。"
-        elif msg_in[2:12] == "changeatpl":
-            if msg_in[13:16] == "bgm":
-                catpl.change_atpl_to_bgm()
-                final_msg = "已嘗試將自動播放清單換為BGM。\n請將Allen Music Bot重新啟動，才會使變更生效。"
-            elif msg_in[13:19] == "normal":
-                catpl.change_atpl_to_normal()
-                final_msg = "已嘗試將自動播放清單換為原狀。\n請將Allen Music Bot重新啟動，才會使變更生效。"
+            if str(message.author) == "Allen Why#5877":
+                msg_author = message.author
+                final_msg = "請確認Allen Music Bot已經停止運作。輸入`a!y`以執行。"
             else:
-                final_msg = "```參數：\nchangeatpl bgm：將Allen Music Bot的自動播放清單換為BGM playlist。\n" \
-                            "           normal：將Allen Music Bot的自動播放清單回歸原狀。```"
+                final_msg = "你無權使用此指令。"
+        elif msg_in[2:8] == "runmsb":
+            if str(message.author) == "Allen Why#5877":
+                os.system("C:\\MusicBot\\run.bat")
+                final_msg = "已嘗試執行Allen Music Bot。"
+            else:
+                final_msg = "你無權使用此指令。"
+        elif msg_in[2:12] == "changeatpl":
+            print(message.author)
+            if str(message.author) == "Allen Why#5877":
+                if msg_in[13:16] == "bgm":
+                    catpl.change_atpl_to_bgm()
+                    final_msg = "已嘗試將自動播放清單換為BGM。\n請將Allen Music Bot重新啟動，才會使變更生效。"
+                elif msg_in[13:19] == "normal":
+                    catpl.change_atpl_to_normal()
+                    final_msg = "已嘗試將自動播放清單換為原狀。\n請將Allen Music Bot重新啟動，才會使變更生效。"
+                else:
+                    final_msg = "```參數：\nchangeatpl bgm：將Allen Music Bot的自動播放清單換為BGM playlist。\n" \
+                                "           normal：將Allen Music Bot的自動播放清單回歸原狀。```"
+            else:
+                final_msg = "你無權使用此指令。"
         elif msg_in[2:3] == "y":
             if message.author == msg_author:
                 msg_author = ""
