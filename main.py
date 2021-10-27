@@ -44,8 +44,8 @@ async def on_message(message):  # 有訊息時
         try:
             log_file = open("log.txt", mode="a")
             log_file.write(use_log)
-        except:
-            print("無法寫入記錄檔。")
+        except Exception as e:
+            print("無法寫入記錄檔。(" + e + ")")
         print(use_log, end="")
         if len(msg_in) == 2:
             final_msg = "我在這！\n如果需要指令協助，請輸入`a!help`"
