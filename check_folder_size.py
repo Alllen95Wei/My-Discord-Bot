@@ -23,15 +23,12 @@ def check_size():
                 elif os.path.isdir(file_path):
                     shutil.rmtree(file_path)
                 msg += "已刪除。"
-                print("已刪除。")
             except Exception as e:
                 msg += "刪除 %s失敗。 原因： %s" % (file_path, e)
-                print("刪除 %s失敗。 原因： %s" % (file_path, e))
     else:
         msg += "未刪除。"
-    print(msg)
     return msg
 
 
 if __name__ == "__main__":
-    check_size()
+    print(check_size())
