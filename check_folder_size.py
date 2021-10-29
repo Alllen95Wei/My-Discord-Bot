@@ -1,18 +1,17 @@
 def check_size():
-    # import module
+    # 匯入模組
     import os
     import shutil
 
-    # assign folder path
-    msg = ""
+    # 指定資料夾路徑
     folder_path = "C:\\MusicBot\\audio_cache"
-    # get size
+    # 取得資料夾大小
     total_size = 0
     for path, dirs, files in os.walk(folder_path):
         for f in files:
             fp = os.path.join(path, f)
             total_size += os.stat(fp).st_size
-    # display size
+    # 判定
     msg = "\"" + folder_path + "\" 大小： " + str(total_size) + " 位元組，"
     if total_size > 1500000000:
         for filename in os.listdir(folder_path):
