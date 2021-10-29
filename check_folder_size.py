@@ -4,7 +4,6 @@ def check_size():
     import shutil
 
     # assign folder path
-    msg = ""
     folder_path = "C:\\MusicBot\\audio_cache"
     # get size
     total_size = 0
