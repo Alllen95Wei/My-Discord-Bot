@@ -2,7 +2,7 @@ import os
 import time
 from random import randint
 import discord
-import check_folder_size as cfz
+import check_folder_size as cfs
 import change_autoplaylist as catpl
 from dotenv import load_dotenv
 
@@ -64,7 +64,7 @@ async def on_message(message):  # 有訊息時
                         "`qrcode <文字>`：將輸入的文字轉換為QR Code\n"
                         "`daily901 <new/channel/fb>`：得到關於「日常901」的資訊\n"
                         "`rickroll`：？？？\n"
-                        "`sizecheck`：檢查\"C:\\MusicBot\\audio_cache\"的大小；當大小超過1000000000位元組時，清空該資料夾\n"
+                        "`sizecheck`：檢查\"C:\\MusicBot\\audio_cache\"的大小；當大小超過1500000000位元組時，清空該資料夾\n"
                         "`changeatpl`：更換Allen Music Bot的自動播放清單"
                         "\n想得到更詳細的指令參數說明，直接輸入指令而不加參數即可\n試試看吧！")
         elif msg_in[2:5] == "ama":
@@ -164,7 +164,7 @@ async def on_message(message):  # 有訊息時
         elif msg_in[2:3] == "y":
             if message.author == msg_author:
                 msg_author = ""
-                final_msg.append(cfz.check_size())
+                final_msg.append(cfs.check_size())
             else:
                 final_msg.append("此回覆無效。")
         else:
@@ -182,7 +182,8 @@ async def on_message(message):  # 有訊息時
                 print("無法寫入記錄檔。(" + e + ")")
             await message.channel.send(message.author.mention)
             await message.channel.send(final_msg[i])
-
+            final_msg = []
+            msg_count = 1
 
 # 取得TOKEN
 env_path = "TOKEN.env"

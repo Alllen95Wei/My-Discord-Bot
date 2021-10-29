@@ -14,7 +14,7 @@ def check_size():
             total_size += os.stat(fp).st_size
     # display size
     msg = "\"" + folder_path + "\" 大小： " + str(total_size) + " 位元組，"
-    if total_size > 1000000000:
+    if total_size > 1500000000:
         for filename in os.listdir(folder_path):
             file_path = os.path.join(folder_path, filename)
             try:
