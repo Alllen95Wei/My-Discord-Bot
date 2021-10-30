@@ -2,7 +2,6 @@ def check_size():
     # 匯入模組
     import os
     import shutil
-
     # 指定資料夾路徑
     folder_path = "C:\\MusicBot\\audio_cache"
     # 取得資料夾大小
