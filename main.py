@@ -46,7 +46,7 @@ async def on_message(message):  # 有訊息時
             log_file = open("log.txt", mode="a")
             log_file.write(use_log)
         except Exception as e:
-            print("無法寫入記錄檔。(" + e + ")")
+            print("無法寫入記錄檔。(" + str(e) + ")")
         print(use_log, end="")
         if len(msg_in) == 2:
             final_msg.append("我在這！\n如果需要指令協助，請輸入`a!help`")
@@ -58,15 +58,15 @@ async def on_message(message):  # 有訊息時
                 final_msg.append(msg)
         elif msg_in[2:6] == "help":  # a! 指令說明
             final_msg.append("呼叫機器人：`a!`\n\n參數:\n"
-                        "`say <文字>`：用大聲公+粗體+斜體+底線說出文字\n"
-                        "`ama <問題>`：給你這個問題的隨機回答\n"
-                        "`random <範圍>`：在指定數字範圍隨機取得一數\n"
-                        "`qrcode <文字>`：將輸入的文字轉換為QR Code\n"
-                        "`daily901 <new/channel/fb>`：得到關於「日常901」的資訊\n"
-                        "`rickroll`：？？？\n"
-                        "`sizecheck`：檢查\"C:\\MusicBot\\audio_cache\"的大小；當大小超過1500000000位元組時，清空該資料夾\n"
-                        "`changeatpl`：更換Allen Music Bot的自動播放清單"
-                        "\n想得到更詳細的指令參數說明，直接輸入指令而不加參數即可\n試試看吧！")
+                             "`say <文字>`：用大聲公+粗體+斜體+底線說出文字\n"
+                             "`ama <問題>`：給你這個問題的隨機回答\n"
+                             "`random <範圍>`：在指定數字範圍隨機取得一數\n"
+                             "`qrcode <文字>`：將輸入的文字轉換為QR Code\n"
+                             "`daily901 <new/channel/fb>`：得到關於「日常901」的資訊\n"
+                             "`rickroll`：？？？\n"
+                             "`sizecheck`：檢查\"C:\\MusicBot\\audio_cache\"的大小；當大小超過1500000000位元組時，清空該資料夾\n"
+                             "`changeatpl`：更換Allen Music Bot的自動播放清單"
+                             "\n想得到更詳細的指令參數說明，直接輸入指令而不加參數即可\n試試看吧！")
         elif msg_in[2:5] == "ama":
             if len(msg_in) == 5:
                 final_msg.append("```參數：\nama <問題>：就是8號球，給你這個問題的隨機回答```")
@@ -80,7 +80,8 @@ async def on_message(message):  # 有訊息時
                     "最好不要現在告訴你", "300 Multiple Choices", "去問瑪卡巴卡更快", "您撥的電話無人接聽，嘟聲後開始計費。", "對不起，您播的號碼是空號，請查明後再撥。")
 
                 ans_b = (
-                    "不可能", "否定的", "不值得", "等等等等", "No no no", "我拒絕", "我覺得不行耶", "https://cdn2.ettoday.net/images/4945/4945172.jpg",
+                    "不可能", "否定的", "不值得", "等等等等", "No no no", "我拒絕", "我覺得不行耶",
+                    "https://cdn2.ettoday.net/images/4945/4945172.jpg",
                     "403 Forbidden", "這樣不好")
 
                 ball_result1 = ans1[randint(0, 2)]
@@ -97,7 +98,7 @@ async def on_message(message):  # 有訊息時
         elif msg_in[2:8] == "random":
             if len(msg_in) == 8:
                 final_msg.append("```參數：\nrandom <範圍>：在指定數字範圍隨機取得一數\n"
-                            "       <範圍>：輸入2個數值，中間以逗號做分隔\n(提示：參數輸入\"%\"就會自動設定範圍為0~100)```")
+                                 "       <範圍>：輸入2個數值，中間以逗號做分隔\n(提示：參數輸入\"%\"就會自動設定範圍為0~100)```")
             else:
                 if msg_in[9:] == "%":
                     a = 0
@@ -112,8 +113,9 @@ async def on_message(message):  # 有訊息時
                 final_msg.append("```參數：\nqrcode <文字>：將輸入的文字轉換為QR Code```")
             else:
                 text = msg_in[9:]
-                final_msg.append("https://chart.apis.google.com/chart?cht=qr&chs=500x500&choe=UTF-8&chld=H|1&chl=" + text.replace(
-                    "\'", ""))
+                final_msg.append(
+                    "https://chart.apis.google.com/chart?cht=qr&chs=500x500&choe=UTF-8&chld=H|1&chl=" + text.replace(
+                        "\'", ""))
         elif msg_in[2:10] == "daily901":
             if msg_in[11:] == "":
                 final_msg.append("```參數：\ndaily901 new：得到「日常901」的最新影片資訊及連結\n         channel：得到「日常901」的連結\n         "
@@ -125,16 +127,16 @@ async def on_message(message):  # 有訊息時
                     newest_video = openfile.read()
                     openfile.close()
                     final_msg.append("目前最新的影片為：\n**" + newest_video + "**\n\n還沒訂閱嗎？\nhttps://www.youtube.com/channel"
-                                                                 "/UCYo6tbHa4AxwStRqWWhaYhw?sub_confirmation=1 ")
+                                                                      "/UCYo6tbHa4AxwStRqWWhaYhw?sub_confirmation=1 ")
                 if msg_in[11:18] == "channel":
                     final_msg.append("日常901的頻道連結：https://www.youtube.com/channel/UCYo6tbHa4AxwStRqWWhaYhw")
                 if msg_in[11:13] == "fb":
                     final_msg.append("鮑哥粉絲團的連結：https://fb.me/liyuan.baoge")
         elif msg_in[2:10] == "rickroll":
-            #channel = message.author.voice.channel
-            #await channel.connect()
+            # channel = message.author.voice.channel
+            # await channel.connect()
             final_msg.append("ap!p never gonna give you up")
-            #await channel.disconnect()
+            # await channel.disconnect()
         elif msg_in[2:11] == "sizecheck":
             if str(message.author) == "Allen Why#5877":
                 msg_author = message.author
@@ -179,11 +181,12 @@ async def on_message(message):  # 有訊息時
                 log_file.write(new_log)
                 log_file.close()
             except Exception as e:
-                print("無法寫入記錄檔。(" + e + ")")
+                print("無法寫入記錄檔。(" + str(e) + ")")
             await message.channel.send(message.author.mention)
             await message.channel.send(final_msg[i])
             final_msg = []
             msg_count = 1
+
 
 # 取得TOKEN
 env_path = "TOKEN.env"
