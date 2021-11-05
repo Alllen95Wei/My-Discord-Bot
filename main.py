@@ -66,7 +66,8 @@ async def on_message(message):  # 有訊息時
                              "`daily901 <new/channel/fb>`：得到關於「日常901」的資訊\n"
                              "`rickroll`：？？？\n"
                              "`sizecheck`：檢查\"C:\\MusicBot\\audio_cache\"的大小；當大小超過1500000000位元組時，清空該資料夾\n"
-                             "`changeatpl`：更換Allen Music Bot的自動播放清單"
+                             "`changeatpl <bgm/normal>`：更換Allen Music Bot的自動播放清單\n"
+                             "`ytdl <YouTube連結>`：下載YouTube的影片為mp3"
                              "\n想得到更詳細的指令參數說明，直接輸入指令而不加參數即可\n試試看吧！")
         elif msg_in[2:5] == "ama":
             if len(msg_in) == 5:
