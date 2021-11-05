@@ -5,7 +5,7 @@ import discord
 import check_folder_size as cfs
 import change_autoplaylist as catpl
 from dotenv import load_dotenv
-
+from youtube_to_mp3 import main_dl
 
 client = discord.Client()
 localtime = time.localtime()
@@ -30,11 +30,12 @@ async def on_ready():
 final_msg = []
 msg_author = ""
 msg_count = 1
+msg_is_file = False
 
 
 @client.event
 async def on_message(message):  # 有訊息時
-    global final_msg, msg_author, msg_count
+    global final_msg, msg_author, msg_count, msg_is_file
     local_time = time.localtime()
     timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
     if message.author == client.user:  # 排除自己的訊息，避免陷入無限循環
@@ -163,6 +164,17 @@ async def on_message(message):  # 有訊息時
                                      "           normal：將Allen Music Bot的自動播放清單回歸原狀。```")
             else:
                 final_msg.append("你無權使用此指令。")
+        elif msg_in[2:6] == "ytdl":
+            if len(msg_in) == 6:
+                final_msg.append("```參數：\nytdl <YouTube連結>：將該YouTube影片下載為mp3，再傳回Discord。由於Discord有"
+                                 "檔案大小限制，因此有時可能會失敗。```")
+            else:
+                yt_url = msg_in[7:]
+                file_name = str(message.author) + yt_url[-11:]
+                print(file_name)
+                if main_dl(yt_url, file_name, file_name + ".mp3") == "finished":
+                    final_msg = discord.File(file_name + ".mp3")
+                    msg_is_file = True
         elif msg_in[2:3] == "y":
             if message.author == msg_author:
                 msg_author = ""
@@ -173,8 +185,14 @@ async def on_message(message):  # 有訊息時
             final_msg.append("參數似乎無效...\n輸入`a!help`獲得說明")
         local_time = time.localtime()
         timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
+        await message.channel.send(message.author.mention)
         for i in range(msg_count):
-            new_log = "[" + timestamp + "]" + str(client.user) + ":\n" + final_msg[i] + "\n\n"
+            if not msg_is_file:
+                await message.channel.send(final_msg[i])
+                new_log = "[" + timestamp + "]" + str(client.user) + ":\n" + final_msg[i] + "\n\n"
+            else:
+                await message.channel.send(file=final_msg)
+                new_log = "[" + timestamp + "]" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
             print(new_log, end="")
             try:
                 log_file = open("log.txt", mode="a")
@@ -182,10 +200,9 @@ async def on_message(message):  # 有訊息時
                 log_file.close()
             except Exception as e:
                 print("無法寫入記錄檔。(" + str(e) + ")")
-            await message.channel.send(message.author.mention)
-            await message.channel.send(final_msg[i])
             final_msg = []
             msg_count = 1
+            msg_is_file = False
 
 
 # 取得TOKEN
