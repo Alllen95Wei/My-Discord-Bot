@@ -7,6 +7,7 @@ import change_autoplaylist as catpl
 from dotenv import load_dotenv
 from youtube_to_mp3 import main_dl
 
+
 client = discord.Client()
 localtime = time.localtime()
 
@@ -31,11 +32,12 @@ final_msg = []
 msg_author = ""
 msg_count = 1
 msg_is_file = False
+msg_send_channel = ""
 
 
 @client.event
 async def on_message(message):  # 有訊息時
-    global final_msg, msg_author, msg_count, msg_is_file
+    global final_msg, msg_author, msg_count, msg_is_file, msg_send_channel
     local_time = time.localtime()
     timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
     if message.author == client.user:  # 排除自己的訊息，避免陷入無限循環
@@ -135,10 +137,13 @@ async def on_message(message):  # 有訊息時
                 if msg_in[11:13] == "fb":
                     final_msg.append("鮑哥粉絲團的連結：https://fb.me/liyuan.baoge")
         elif msg_in[2:10] == "rickroll":
-            # channel = message.author.voice.channel
-            # await channel.connect()
+            channel = message.author.voice.channel
+            await channel.connect()
             final_msg.append("ap!p never gonna give you up")
-            # await channel.disconnect()
+            final_msg.append("ap!skip")
+            msg_count = 2
+            msg_send_channel = client.get_channel(891665312028713001)
+            await channel.disconnect()
         elif msg_in[2:11] == "sizecheck":
             if str(message.author) == "Allen Why#5877":
                 msg_author = message.author
