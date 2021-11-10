@@ -138,12 +138,14 @@ async def on_message(message):  # 有訊息時
                     final_msg.append("鮑哥粉絲團的連結：https://fb.me/liyuan.baoge")
         elif msg_in[2:10] == "rickroll":
             channel = message.author.voice.channel
-            await channel.connect()
-            final_msg.append("ap!p never gonna give you up")
-            final_msg.append("ap!skip")
+            try:
+                await channel.connect()
+            except Exception as e:
+                print(e)
+            final_msg.append("ap!pn never gonna give you up")
+            final_msg.append("ap!skip f")
             msg_count = 2
             msg_send_channel = client.get_channel(891665312028713001)
-            await channel.disconnect()
         elif msg_in[2:11] == "sizecheck":
             if str(message.author) == "Allen Why#5877":
                 msg_author = message.author
@@ -191,13 +193,16 @@ async def on_message(message):  # 有訊息時
             final_msg.append("參數似乎無效...\n輸入`a!help`獲得說明")
         local_time = time.localtime()
         timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
-        await message.channel.send(message.author.mention)
+        if msg_send_channel == "":
+            msg_send_channel = message.channel
+        print(msg_send_channel)
+        await msg_send_channel.send(message.author.mention)
         for i in range(msg_count):
             if not msg_is_file:
-                await message.channel.send(final_msg[i])
+                await msg_send_channel.send(final_msg[i])
                 new_log = "[" + timestamp + "]" + str(client.user) + ":\n" + final_msg[i] + "\n\n"
             else:
-                await message.channel.send(file=final_msg)
+                await msg_send_channel.send(file=final_msg)
                 new_log = "[" + timestamp + "]" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
             print(new_log, end="")
             try:
@@ -206,9 +211,10 @@ async def on_message(message):  # 有訊息時
                 log_file.close()
             except Exception as e:
                 print("無法寫入記錄檔。(" + str(e) + ")")
-            final_msg = []
-            msg_count = 1
-            msg_is_file = False
+        final_msg = []
+        msg_count = 1
+        msg_is_file = False
+        msg_send_channel = ""
 
 
 # 取得TOKEN
