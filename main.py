@@ -21,7 +21,7 @@ async def on_ready():
     timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", localtime)
     try:
         log_file = open("log.txt", mode="a")
-        login_log = "[" + timestamp + "]" + "登入成功！\n"
+        login_log = "-------------------------------------------------------------\n[" + timestamp + "]" + "登入成功！\n"
         log_file.write(login_log)
         log_file.close()
     except Exception as e:
