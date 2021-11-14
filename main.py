@@ -195,7 +195,6 @@ async def on_message(message):  # 有訊息時
         timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
         if msg_send_channel == "":
             msg_send_channel = message.channel
-        print(msg_send_channel)
         await msg_send_channel.send(message.author.mention)
         for i in range(msg_count):
             if not msg_is_file:
