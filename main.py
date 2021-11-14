@@ -147,20 +147,20 @@ async def on_message(message):  # 有訊息時
             msg_count = 2
             msg_send_channel = client.get_channel(891665312028713001)
         elif msg_in[2:11] == "sizecheck":
-            if str(message.author) == "Allen Why#5877":
+            if str(message.author) == str(message.guild.owner) or "Allen Why#5877":
                 msg_author = message.author
                 final_msg.append("請確認Allen Music Bot已經停止運作。輸入`a!y`以執行。")
             else:
                 final_msg.append("你無權使用此指令。")
         elif msg_in[2:8] == "runmsb":
-            if str(message.author) == "Allen Why#5877":
+            if str(message.author) == str(message.guild.owner) or "Allen Why#5877":
                 os.system("C:\\MusicBot\\run.bat")
                 final_msg.append("已嘗試執行Allen Music Bot。")
             else:
                 final_msg.append("你無權使用此指令。")
         elif msg_in[2:12] == "changeatpl":
             print(message.author)
-            if str(message.author) == "Allen Why#5877":
+            if str(message.author) == str(message.guild.owner) or "Allen Why#5877":
                 if msg_in[13:16] == "bgm":
                     catpl.change_atpl_to_bgm()
                     final_msg.append("已嘗試將自動播放清單換為BGM。\n請將Allen Music Bot重新啟動，才會使變更生效。")
