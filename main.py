@@ -150,8 +150,8 @@ async def on_message(message):  # 有訊息時
             msg_send_channel = client.get_channel(891665312028713001)
         elif msg_in[2:11] == "sizecheck":
             if str(message.author) == str(message.guild.owner) or "Allen Why#5877":
+                final_msg.append(cfs.check_size())
                 msg_author = message.author
-                final_msg.append("請確認Allen Music Bot已經停止運作。輸入`a!y`以執行。")
             else:
                 final_msg.append("你無權使用此指令。")
         elif msg_in[2:8] == "runmsb":
@@ -188,7 +188,7 @@ async def on_message(message):  # 有訊息時
         elif msg_in[2:3] == "y":
             if message.author == msg_author:
                 msg_author = ""
-                final_msg.append(cfs.check_size())
+                final_msg.append(cfs.clean_folder())
             else:
                 final_msg.append("此回覆無效。")
         else:
