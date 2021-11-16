@@ -26,6 +26,8 @@ async def on_ready():
         log_file.close()
     except Exception as e:
         print(e)
+    vc = client.get_channel(888707777659289660)
+    await vc.connect()
 
 
 final_msg = []
@@ -193,27 +195,39 @@ async def on_message(message):  # 有訊息時
             final_msg.append("參數似乎無效...\n輸入`a!help`獲得說明")
         local_time = time.localtime()
         timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
-        if msg_send_channel == "":
-            msg_send_channel = message.channel
-        await msg_send_channel.send(message.author.mention)
-        for i in range(msg_count):
-            if not msg_is_file:
-                await msg_send_channel.send(final_msg[i])
-                new_log = "[" + timestamp + "]" + str(client.user) + ":\n" + final_msg[i] + "\n\n"
-            else:
-                await msg_send_channel.send(file=final_msg)
-                new_log = "[" + timestamp + "]" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
-            print(new_log, end="")
+    elif message.channel == client.get_channel(891665312028713001):
+        if "https://www.youtube.com" == msg_in[:23] or "https://youtu.be" == msg_in[:16]:
+            final_msg.append("ap!p " + msg_in)
+            use_log = "[" + timestamp + "]" + str(message.author) + ":\n" + msg_in + "\n\n"
             try:
                 log_file = open("log.txt", mode="a")
-                log_file.write(new_log)
-                log_file.close()
+                log_file.write(use_log)
             except Exception as e:
                 print("無法寫入記錄檔。(" + str(e) + ")")
-        final_msg = []
-        msg_count = 1
-        msg_is_file = False
-        msg_send_channel = ""
+            print(use_log, end="")
+    else:
+        return
+    if msg_send_channel == "":
+        msg_send_channel = message.channel
+    await msg_send_channel.send(message.author.mention)
+    for i in range(msg_count):
+        if not msg_is_file:
+            await msg_send_channel.send(final_msg[i])
+            new_log = "[" + timestamp + "]" + str(client.user) + ":\n" + final_msg[i] + "\n\n"
+        else:
+            await msg_send_channel.send(file=final_msg)
+            new_log = "[" + timestamp + "]" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
+        print(new_log, end="")
+        try:
+            log_file = open("log.txt", mode="a")
+            log_file.write(new_log)
+            log_file.close()
+        except Exception as e:
+            print("無法寫入記錄檔。(" + str(e) + ")")
+    final_msg = []
+    msg_count = 1
+    msg_is_file = False
+    msg_send_channel = ""
 
 
 # 取得TOKEN
