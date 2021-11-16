@@ -47,6 +47,7 @@ async def on_message(message):  # 有訊息時
     msg_in = message.content
     if msg_in[:2] == "a!":
         use_log = "[" + timestamp + "]" + str(message.author) + ":\n" + msg_in + "\n\n"
+        await msg_send_channel.send(message.author.mention)
         try:
             log_file = open("log.txt", mode="a")
             log_file.write(use_log)
@@ -209,7 +210,6 @@ async def on_message(message):  # 有訊息時
         return
     if msg_send_channel == "":
         msg_send_channel = message.channel
-    await msg_send_channel.send(message.author.mention)
     for i in range(msg_count):
         if not msg_is_file:
             await msg_send_channel.send(final_msg[i])
