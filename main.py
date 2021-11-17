@@ -32,7 +32,7 @@ async def on_ready():
 
 final_msg = []
 msg_author = ""
-msg_count = 1
+msg_count = 0
 msg_is_file = False
 msg_send_channel = ""
 
@@ -47,7 +47,7 @@ async def on_message(message):  # 有訊息時
     msg_in = message.content
     if msg_in[:2] == "a!":
         use_log = "[" + timestamp + "]" + str(message.author) + ":\n" + msg_in + "\n\n"
-        await msg_send_channel.send(message.author.mention)
+        await message.channel.send(message.author.mention)
         try:
             log_file = open("log.txt", mode="a")
             log_file.write(use_log)
@@ -147,7 +147,6 @@ async def on_message(message):  # 有訊息時
                 print(e)
             final_msg.append("ap!pn never gonna give you up")
             final_msg.append("ap!skip f")
-            msg_count = 2
             msg_send_channel = client.get_channel(891665312028713001)
         elif msg_in[2:11] == "sizecheck":
             if str(message.author) == str(message.guild.owner) or "Allen Why#5877":
@@ -198,7 +197,8 @@ async def on_message(message):  # 有訊息時
         timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
     elif message.channel == client.get_channel(891665312028713001):
         if "https://www.youtube.com" == msg_in[:23] or "https://youtu.be" == msg_in[:16]:
-            final_msg.append("ap!p " + msg_in)
+            ap_cmd = "ap!p " + msg_in
+            final_msg.append(ap_cmd)
             use_log = "[" + timestamp + "]" + str(message.author) + ":\n" + msg_in + "\n\n"
             try:
                 log_file = open("log.txt", mode="a")
@@ -206,11 +206,9 @@ async def on_message(message):  # 有訊息時
             except Exception as e:
                 print("無法寫入記錄檔。(" + str(e) + ")")
             print(use_log, end="")
-    else:
-        return
     if msg_send_channel == "":
         msg_send_channel = message.channel
-    for i in range(msg_count):
+    for i in range(len(final_msg)):
         if not msg_is_file:
             await msg_send_channel.send(final_msg[i])
             new_log = "[" + timestamp + "]" + str(client.user) + ":\n" + final_msg[i] + "\n\n"
@@ -227,7 +225,7 @@ async def on_message(message):  # 有訊息時
     final_msg = []
     msg_count = 1
     msg_is_file = False
-    msg_send_channel = ""
+    msg_send_channel = message.channel
 
 
 # 取得TOKEN
