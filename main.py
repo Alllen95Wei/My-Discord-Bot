@@ -161,7 +161,6 @@ async def on_message(message):  # 有訊息時
             else:
                 final_msg.append("你無權使用此指令。")
         elif msg_in[2:12] == "changeatpl":
-            print(message.author)
             if str(message.author) == str(message.guild.owner) or "Allen Why#5877":
                 if msg_in[13:16] == "bgm":
                     catpl.change_atpl_to_bgm()
@@ -227,7 +226,7 @@ async def on_message(message):  # 有訊息時
     final_msg = []
     msg_count = 1
     msg_is_file = False
-    msg_send_channel = message.channel
+    msg_send_channel = ""
 
 
 # 取得TOKEN
