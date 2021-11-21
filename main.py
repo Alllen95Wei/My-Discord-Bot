@@ -72,7 +72,8 @@ async def on_message(message):  # 有訊息時
                              "`rickroll`：？？？\n"
                              "`sizecheck`：檢查\"C:\\MusicBot\\audio_cache\"的大小；當大小超過1500000000位元組時，清空該資料夾\n"
                              "`changeatpl <bgm/normal>`：更換Allen Music Bot的自動播放清單\n"
-                             "`ytdl <YouTube連結>`：下載YouTube的影片為mp3"
+                             "`ytdl <YouTube連結>`：下載YouTube的影片為mp3\n"
+                             "`rc`：重新連接語音頻道「貓娘實驗室ww/音樂 (96kbps)」。"
                              "\n想得到更詳細的指令參數說明，直接輸入指令而不加參數即可\n試試看吧！")
         elif msg_in[2:5] == "ama":
             if len(msg_in) == 5:
@@ -184,6 +185,10 @@ async def on_message(message):  # 有訊息時
                 if main_dl(yt_url, file_name, file_name + ".mp3") == "finished":
                     final_msg = discord.File(file_name + ".mp3")
                     msg_is_file = True
+        elif msg_in[2:4] == "rc":
+            vc = client.get_channel(888707777659289660)
+            await vc.connect()
+            final_msg.append("已嘗試加入「貓娘實驗室ww/音樂 (96kbps)」。")
         elif msg_in[2:3] == "y":
             if message.author == msg_author:
                 msg_author = ""
