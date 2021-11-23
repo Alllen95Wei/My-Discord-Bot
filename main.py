@@ -200,7 +200,8 @@ async def on_message(message):  # 有訊息時
         local_time = time.localtime()
         timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
     elif message.channel == client.get_channel(891665312028713001):
-        if "https://www.youtube.com" == msg_in[:23] or "https://youtu.be" == msg_in[:16]:
+        if "https://www.youtube.com" == msg_in[:23] or "https://youtu.be" == msg_in[:16] or "https://open.spotify.com" \
+                == msg_in[:24]:
             ap_cmd = "ap!p " + msg_in
             final_msg.append(ap_cmd)
             use_log = "[" + timestamp + "]" + str(message.channel) + "/" + str(message.author) + ":\n" + msg_in + "\n\n"
