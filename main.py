@@ -217,7 +217,7 @@ async def on_message(message):  # 有訊息時
         if not msg_is_file:
             await msg_send_channel.send(final_msg[i])
             new_log = "[" + timestamp + "]" + str(msg_send_channel) + "/" + str(client.user) + ":\n" + final_msg[i] + \
-                      "\n\n "
+                      "\n\n"
         else:
             await msg_send_channel.send(file=final_msg)
             new_log = "[" + timestamp + "]" + str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) +\
