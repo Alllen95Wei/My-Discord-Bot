@@ -220,8 +220,8 @@ async def on_message(message):  # 有訊息時
                       "\n\n"
         else:
             await msg_send_channel.send(file=final_msg)
-            new_log = "[" + timestamp + "]" + str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) +\
-                      "\n\n"
+            new_log = "[" + timestamp + "]" + str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) \
+                      + "\n\n"
         print(new_log, end="")
         try:
             log_file = open("log.txt", mode="a")
