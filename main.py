@@ -7,7 +7,6 @@ import change_autoplaylist as catpl
 from dotenv import load_dotenv
 from youtube_to_mp3 import main_dl
 
-
 client = discord.Client()
 localtime = time.localtime()
 
@@ -131,11 +130,15 @@ async def on_message(message):  # 有訊息時
             else:
                 path = "daily901-info.txt"
                 if msg_in[11:14] == "new":
-                    openfile = open(path, mode="r", encoding="utf8")
-                    newest_video = openfile.read()
-                    openfile.close()
-                    final_msg.append("目前最新的影片為：\n**" + newest_video + "**\n\n還沒訂閱嗎？\nhttps://www.youtube.com/channel"
-                                                                      "/UCYo6tbHa4AxwStRqWWhaYhw?sub_confirmation=1 ")
+                    try:
+                        openfile = open(path, mode="r", encoding="utf8")
+                        newest_video = openfile.read()
+                        openfile.close()
+                        final_msg.append("目前最新的影片為：\n**" + newest_video + "**\n\n還沒訂閱嗎？\nhttps://www.youtube.com"
+                                                                          "/channel "
+                                                                          "/UCYo6tbHa4AxwStRqWWhaYhw?sub_confirmation=1 ")
+                    except Exception as e:
+                        final_msg.append("```" + str(e) + "```")
                 if msg_in[11:18] == "channel":
                     final_msg.append("日常901的頻道連結：https://www.youtube.com/channel/UCYo6tbHa4AxwStRqWWhaYhw")
                 if msg_in[11:13] == "fb":
@@ -145,7 +148,7 @@ async def on_message(message):  # 有訊息時
             try:
                 await channel.connect()
             except Exception as e:
-                print(e)
+                final_msg.append("```" + str(e) + "```")
             final_msg.append("ap!p never gonna give you up")
             final_msg.append("ap!skip f")
             msg_send_channel = client.get_channel(891665312028713001)
@@ -156,19 +159,21 @@ async def on_message(message):  # 有訊息時
             else:
                 final_msg.append("你無權使用此指令。")
         elif msg_in[2:8] == "runmsb":
-            if str(message.author) == str(message.guild.owner) or "Allen Why#5877":
+            if message.guild.owner is None:
+                final_msg.append("不能在私人訊息使用此指令。請嘗試在伺服器使用此指令。")
+            elif str(message.author) == str(message.guild.owner) or "Allen Why#5877":
                 os.system("C:\\MusicBot\\run.bat")
                 final_msg.append("已嘗試執行Allen Music Bot。")
             else:
                 final_msg.append("你無權使用此指令。")
         elif msg_in[2:12] == "changeatpl":
-            if str(message.author) == str(message.guild.owner) or "Allen Why#5877":
+            if message.guild.owner is None:
+                final_msg.append("不能在私人訊息使用此指令。請嘗試在伺服器使用此指令。")
+            elif str(message.author) == str(message.guild.owner) or "Allen Why#5877":
                 if msg_in[13:16] == "bgm":
-                    catpl.change_atpl_to_bgm()
-                    final_msg.append("已嘗試將自動播放清單換為BGM。\n請將Allen Music Bot重新啟動，才會使變更生效。")
+                    final_msg.append(catpl.change_atpl_to_normal())
                 elif msg_in[13:19] == "normal":
-                    catpl.change_atpl_to_normal()
-                    final_msg.append("已嘗試將自動播放清單換為原狀。\n請將Allen Music Bot重新啟動，才會使變更生效。")
+                    final_msg.append(catpl.change_atpl_to_normal())
                 else:
                     final_msg.append("```參數：\nchangeatpl bgm：將Allen Music Bot的自動播放清單換為BGM playlist。\n"
                                      "           normal：將Allen Music Bot的自動播放清單回歸原狀。```")
