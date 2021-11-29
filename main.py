@@ -135,8 +135,8 @@ async def on_message(message):  # 有訊息時
                         newest_video = openfile.read()
                         openfile.close()
                         final_msg.append("目前最新的影片為：\n**" + newest_video + "**\n\n還沒訂閱嗎？\nhttps://www.youtube.com"
-                                                                          "/channel "
-                                                                          "/UCYo6tbHa4AxwStRqWWhaYhw?sub_confirmation=1 ")
+                                                                          "/channel/UCYo6tbHa4AxwStRqWWhaYhw"
+                                                                          "?sub_confirmation=1")
                     except Exception as e:
                         final_msg.append("```" + str(e) + "```")
                 if msg_in[11:18] == "channel":
@@ -153,32 +153,35 @@ async def on_message(message):  # 有訊息時
             final_msg.append("ap!skip f")
             msg_send_channel = client.get_channel(891665312028713001)
         elif msg_in[2:11] == "sizecheck":
-            if str(message.author) == str(message.guild.owner) or "Allen Why#5877":
+            if "Direct Message" in str(message.channel):
+                final_msg.append("不能在私人訊息使用此指令。請至伺服器使用此指令。")
+            elif str(message.author) == str(message.guild.owner) or "Allen Why#5877":
                 final_msg.append(cfs.check_size())
                 msg_author = message.author
             else:
                 final_msg.append("你無權使用此指令。")
         elif msg_in[2:8] == "runmsb":
-            if message.guild.owner is None:
-                final_msg.append("不能在私人訊息使用此指令。請嘗試在伺服器使用此指令。")
+            if "Direct Message" in str(message.channel):
+                final_msg.append("不能在私人訊息使用此指令。請至伺服器使用此指令。")
             elif str(message.author) == str(message.guild.owner) or "Allen Why#5877":
                 os.system("C:\\MusicBot\\run.bat")
                 final_msg.append("已嘗試執行Allen Music Bot。")
             else:
                 final_msg.append("你無權使用此指令。")
         elif msg_in[2:12] == "changeatpl":
-            if message.guild.owner is None:
-                final_msg.append("不能在私人訊息使用此指令。請嘗試在伺服器使用此指令。")
-            elif str(message.author) == str(message.guild.owner) or "Allen Why#5877":
-                if msg_in[13:16] == "bgm":
-                    final_msg.append(catpl.change_atpl_to_normal())
-                elif msg_in[13:19] == "normal":
-                    final_msg.append(catpl.change_atpl_to_normal())
-                else:
-                    final_msg.append("```參數：\nchangeatpl bgm：將Allen Music Bot的自動播放清單換為BGM playlist。\n"
-                                     "           normal：將Allen Music Bot的自動播放清單回歸原狀。```")
+            if "Direct Message" in str(message.channel):
+                final_msg.append("不能在私人訊息使用此指令。請至伺服器使用此指令。")
             else:
-                final_msg.append("你無權使用此指令。")
+                if str(message.author) == str(message.guild.owner) or "Allen Why#5877":
+                    if msg_in[13:16] == "bgm":
+                        final_msg.append(catpl.change_atpl_to_normal())
+                    elif msg_in[13:19] == "normal":
+                        final_msg.append(catpl.change_atpl_to_normal())
+                    else:
+                        final_msg.append("```參數：\nchangeatpl bgm：將Allen Music Bot的自動播放清單換為BGM playlist。\n"
+                                         "           normal：將Allen Music Bot的自動播放清單回歸原狀。```")
+                else:
+                    final_msg.append("你無權使用此指令。")
         elif msg_in[2:6] == "ytdl":
             if len(msg_in) == 6:
                 final_msg.append("```參數：\nytdl <YouTube連結>：將該YouTube影片下載為mp3，再傳回Discord。由於Discord有"
@@ -186,14 +189,19 @@ async def on_message(message):  # 有訊息時
             else:
                 yt_url = msg_in[7:]
                 file_name = str(message.author) + yt_url[-11:]
-                print(file_name)
                 if main_dl(yt_url, file_name, file_name + ".mp3") == "finished":
                     final_msg = discord.File(file_name + ".mp3")
                     msg_is_file = True
         elif msg_in[2:4] == "rc":
             vc = client.get_channel(888707777659289660)
-            await vc.connect()
-            final_msg.append("已嘗試加入「貓娘實驗室ww/音樂 (96kbps)」。")
+            try:
+                await vc.connect()
+                final_msg.append("已嘗試加入「貓娘實驗室ww/音樂 (96kbps)」。")
+            except Exception as e:
+                if str(e) == "Already connected to a voice channel.":
+                    final_msg.append("已經連線至語音頻道。")
+                else:
+                    final_msg.append("```" + str(e) + "```")
         elif msg_in[2:3] == "y":
             if message.author == msg_author:
                 msg_author = ""
