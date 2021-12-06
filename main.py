@@ -155,7 +155,7 @@ async def on_message(message):  # 有訊息時
         elif msg_in[2:11] == "sizecheck":
             if "Direct Message" in str(message.channel):
                 final_msg.append("不能在私人訊息使用此指令。請至伺服器使用此指令。")
-            elif str(message.author) == str(message.guild.owner) or "Allen Why#5877":
+            elif str(message.author) == "Allen Why#5877" or str(message.guild.owner):
                 final_msg.append(cfs.check_size())
                 msg_author = message.author
             else:
@@ -163,7 +163,7 @@ async def on_message(message):  # 有訊息時
         elif msg_in[2:8] == "runmsb":
             if "Direct Message" in str(message.channel):
                 final_msg.append("不能在私人訊息使用此指令。請至伺服器使用此指令。")
-            elif str(message.author) == str(message.guild.owner) or "Allen Why#5877":
+            elif str(message.author) == "Allen Why#5877" or str(message.guild.owner):
                 os.system("C:\\MusicBot\\run.bat")
                 final_msg.append("已嘗試執行Allen Music Bot。")
             else:
@@ -172,7 +172,7 @@ async def on_message(message):  # 有訊息時
             if "Direct Message" in str(message.channel):
                 final_msg.append("不能在私人訊息使用此指令。請至伺服器使用此指令。")
             else:
-                if str(message.author) == str(message.guild.owner) or "Allen Why#5877":
+                if str(message.author) == "Allen Why#5877" or str(message.guild.owner):
                     if msg_in[13:16] == "bgm":
                         final_msg.append(catpl.change_atpl_to_normal())
                     elif msg_in[13:19] == "normal":
