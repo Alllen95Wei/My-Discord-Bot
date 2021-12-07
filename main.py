@@ -6,9 +6,12 @@ import check_folder_size as cfs
 import change_autoplaylist as catpl
 from dotenv import load_dotenv
 from youtube_to_mp3 import main_dl
+import detect_pc_status as dps
 
 client = discord.Client()
 localtime = time.localtime()
+
+i = 1
 
 
 @client.event
@@ -27,6 +30,11 @@ async def on_ready():
         print(e)
     vc = client.get_channel(888707777659289660)
     await vc.connect()
+    while i > 0:
+        act_msg = dps.pc_status()
+        activity = discord.Activity(type=discord.ActivityType.playing, name=act_msg)
+        await client.change_presence(status=discord.Status.idle, activity=activity)
+        time.sleep(10)
 
 
 final_msg = []
