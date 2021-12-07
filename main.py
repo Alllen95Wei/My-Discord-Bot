@@ -11,8 +11,6 @@ import detect_pc_status as dps
 client = discord.Client()
 localtime = time.localtime()
 
-i = 1
-
 
 @client.event
 async def on_ready():
@@ -30,11 +28,6 @@ async def on_ready():
         print(e)
     vc = client.get_channel(888707777659289660)
     await vc.connect()
-    while i > 0:
-        act_msg = dps.pc_status()
-        activity = discord.Activity(type=discord.ActivityType.playing, name=act_msg)
-        await client.change_presence(status=discord.Status.idle, activity=activity)
-        time.sleep(10)
 
 
 final_msg = []
@@ -210,6 +203,9 @@ async def on_message(message):  # 有訊息時
                     final_msg.append("已經連線至語音頻道。")
                 else:
                     final_msg.append("```" + str(e) + "```")
+        elif msg_in[2:5] == "dps":
+            act_msg = dps.pc_status()
+            final_msg.append(act_msg)
         elif msg_in[2:3] == "y":
             if message.author == msg_author:
                 msg_author = ""
