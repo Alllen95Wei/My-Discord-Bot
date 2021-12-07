@@ -28,6 +28,10 @@ async def on_ready():
         print(e)
     vc = client.get_channel(888707777659289660)
     await vc.connect()
+    while client != None:
+        ch = client.get_channel(858176848747429938)
+        await ch.send("test")
+        time.sleep(5)
 
 
 final_msg = []
