@@ -28,10 +28,6 @@ async def on_ready():
         print(e)
     vc = client.get_channel(888707777659289660)
     await vc.connect()
-    while client != None:
-        ch = client.get_channel(858176848747429938)
-        await ch.send("test")
-        time.sleep(5)
 
 
 final_msg = []
@@ -83,7 +79,7 @@ async def on_message(message):  # 有訊息時
             if len(msg_in) == 5:
                 final_msg.append("```參數：\nama <問題>：就是8號球，給你這個問題的隨機回答```")
             else:
-                ans1 = ["g", "s", "b"]
+                ans1 = ("g", "s", "b")
                 ans_g = ("看起來不錯喔", "肯定的", "我覺得可行", "絕對OK", "是的", "確定", "200 OK", "100 Continue", "Just do it")
 
                 ans_s = (
