@@ -5,6 +5,8 @@ import discord
 import check_folder_size as cfs
 import change_autoplaylist as catpl
 from dotenv import load_dotenv
+
+import log_writter
 from youtube_to_mp3 import main_dl
 import detect_pc_status as dps
 
@@ -16,16 +18,8 @@ localtime = time.localtime()
 async def on_ready():
     music = discord.Activity(type=discord.ActivityType.listening, name="YOASOBI is soooooo great")
     await client.change_presence(status=discord.Status.idle, activity=music)
-    print("登入成功！\n目前登入身份：", client.user)
-    print("\n以下為使用紀錄(只要開頭訊息有\"a!\"，則這則訊息和系統回應皆會被記錄)：")
-    timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", localtime)
-    try:
-        log_file = open("log.txt", mode="a")
-        login_log = "-------------------------------------------------------------\n[" + timestamp + "]" + "登入成功！\n"
-        log_file.write(login_log)
-        log_file.close()
-    except Exception as e:
-        print(e)
+    log_writter.write_log("-------------------------------------------------------------\n登入成功！\n目前登入身份：" +
+                          str(client.user) + "\n以下為使用紀錄(只要開頭訊息有\"a!\"，則這則訊息和系統回應皆會被記錄)：\n", True)
     vc = client.get_channel(888707777659289660)
     await vc.connect()
 
@@ -40,20 +34,13 @@ msg_send_channel = ""
 @client.event
 async def on_message(message):  # 有訊息時
     global final_msg, msg_author, msg_count, msg_is_file, msg_send_channel
-    local_time = time.localtime()
-    timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
     if message.author == client.user:  # 排除自己的訊息，避免陷入無限循環
         return
     msg_in = message.content
     if msg_in[:2] == "a!":
-        use_log = "[" + timestamp + "]" + str(message.channel) + "/" + str(message.author) + ":\n" + msg_in + "\n\n"
+        use_log = str(message.channel) + "/" + str(message.author) + ":\n" + msg_in + "\n\n"
+        log_writter.write_log(use_log)
         await message.channel.send(message.author.mention)
-        try:
-            log_file = open("log.txt", mode="a")
-            log_file.write(use_log)
-        except Exception as e:
-            print("無法寫入記錄檔。(" + str(e) + ")")
-        print(use_log, end="")
         if len(msg_in) == 2:
             final_msg.append("我在這！\n如果需要指令協助，請輸入`a!help`")
         elif msg_in[2:5] == "say":
@@ -215,38 +202,25 @@ async def on_message(message):  # 有訊息時
                 final_msg.append("此回覆無效。")
         else:
             final_msg.append("參數似乎無效...\n輸入`a!help`獲得說明")
-        local_time = time.localtime()
-        timestamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
     elif message.channel == client.get_channel(891665312028713001):
         if "https://www.youtube.com" == msg_in[:23] or "https://youtu.be" == msg_in[:16] or "https://open.spotify.com" \
                 == msg_in[:24]:
             ap_cmd = "ap!p " + msg_in
             final_msg.append(ap_cmd)
-            use_log = "[" + timestamp + "]" + str(message.channel) + "/" + str(message.author) + ":\n" + msg_in + "\n\n"
-            try:
-                log_file = open("log.txt", mode="a")
-                log_file.write(use_log)
-            except Exception as e:
-                print("無法寫入記錄檔。(" + str(e) + ")")
-            print(use_log, end="")
+            use_log = str(message.channel) + "/" + str(message.author) + ":\n" + msg_in + "\n\n"
+            log_writter.write_log(use_log)
     if msg_send_channel == "":
         msg_send_channel = message.channel
     for i in range(len(final_msg)):
         if not msg_is_file:
             await msg_send_channel.send(final_msg[i])
-            new_log = "[" + timestamp + "]" + str(msg_send_channel) + "/" + str(client.user) + ":\n" + final_msg[i] + \
+            new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + final_msg[i] + \
                       "\n\n"
         else:
             await msg_send_channel.send(file=final_msg)
-            new_log = "[" + timestamp + "]" + str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) \
+            new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) \
                       + "\n\n"
-        print(new_log, end="")
-        try:
-            log_file = open("log.txt", mode="a")
-            log_file.write(new_log)
-            log_file.close()
-        except Exception as e:
-            print("無法寫入記錄檔。(" + str(e) + ")")
+        log_writter.write_log(new_log)
     final_msg = []
     msg_count = 1
     msg_is_file = False
