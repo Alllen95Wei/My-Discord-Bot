@@ -215,12 +215,10 @@ async def on_message(message):  # 有訊息時
     for i in range(len(final_msg)):
         if not msg_is_file:
             await msg_send_channel.send(final_msg[i])
-            new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + final_msg[i] + \
-                      "\n\n"
+            new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + final_msg[i] + "\n\n"
         else:
             await msg_send_channel.send(file=final_msg)
-            new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) \
-                      + "\n\n"
+            new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
         log_writter.write_log(new_log)
     final_msg = []
     msg_count = 1
