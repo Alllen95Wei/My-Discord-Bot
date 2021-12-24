@@ -1,10 +1,10 @@
 def pc_status():
-    import psutil
-
-    i = 1
-    while i > 0:
+    try:
+        import psutil
         msg = "CPU使用率：" + str(psutil.cpu_percent()) + "%" + " / 記憶體使用率：" + str(psutil.virtual_memory().percent) + "%"
-        return msg
+    except Exception as e:
+        msg = "```" + str(e) + "```"
+    return msg
 
 
 if __name__ == "__main__":
