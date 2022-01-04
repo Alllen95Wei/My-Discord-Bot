@@ -164,7 +164,7 @@ async def on_message(message):  # 有訊息時
             else:
                 if str(message.author) == "Allen Why#5877" or str(message.guild.owner):
                     if msg_in[13:16] == "bgm":
-                        final_msg.append(catpl.change_atpl_to_normal())
+                        final_msg.append(catpl.change_atpl_to_bgm())
                     elif msg_in[13:19] == "normal":
                         final_msg.append(catpl.change_atpl_to_normal())
                     else:
