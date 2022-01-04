@@ -8,7 +8,7 @@ def write_log(content, no_time_stamp=False):
         time_stamp = time.strftime("%Y-%m-%d %p %I:%M:%S", local_time)
         log = "[" + time_stamp + "]" + log
     try:
-        log_file = open("log.txt", mode="a")
+        log_file = open("log.txt", mode="a", encoding="utf-8")
         log_file.write(log)
         log_file.close()
     except Exception as e:
