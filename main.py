@@ -58,7 +58,7 @@ async def on_message(message):  # 有訊息時
                              "`qrcode <文字>`：將輸入的文字轉換為QR Code\n"
                              "`daily901 <new/channel/fb>`：得到關於「日常901」的資訊\n"
                              "`rickroll`：？？？\n"
-                             "`sizecheck`：檢查\"C:\\MusicBot\\audio_cache\"的大小；當大小超過1500000000位元組時，清空該資料夾\n"
+                             "`sizecheck`：檢查`\"C:\\MusicBot\\audio_cache\"`的大小；當大小超過1500000000位元組時，清空該資料夾\n"
                              "`changeatpl <bgm/normal>`：更換Allen Music Bot的自動播放清單\n"
                              "`ytdl <YouTube連結>`：下載YouTube的影片為mp3\n"
                              "`rc`：重新連接語音頻道「貓娘實驗室ww/音樂 (96kbps)」\n"

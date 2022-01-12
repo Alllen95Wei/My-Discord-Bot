@@ -1,8 +1,6 @@
-def check_size():
+def check_size(folder_path="C:\\MusicBot\\audio_cache"):
     # 匯入模組
     import os
-    # 指定資料夾路徑
-    folder_path = "C:\\MusicBot\\audio_cache"
     # 取得資料夾大小
     total_size = 0
     for path, dirs, files in os.walk(folder_path):
@@ -10,7 +8,7 @@ def check_size():
             fp = os.path.join(path, f)
             total_size += os.stat(fp).st_size
     # 判定
-    msg = "\"" + folder_path + "\" 大小： " + str(total_size) + " 位元組。"
+    msg = "`\"" + folder_path + "\"` 大小： " + str(total_size) + " 位元組。"
     return msg
 
 
@@ -32,4 +30,4 @@ def clean_folder():
 
 
 if __name__ == "__main__":
-    print(check_size())
+    print(check_size(folder_path=input("貼上資料夾路徑：")))
