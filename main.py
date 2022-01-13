@@ -27,7 +27,6 @@ async def on_ready():
 
 final_msg = []
 msg_author = ""
-msg_count = 0
 msg_is_file = False
 msg_send_channel = ""
 
