@@ -70,7 +70,6 @@ async def on_message(message):  # 有訊息時
             else:
                 ans1 = ("g", "s", "b")
                 ans_g = ("看起來不錯喔", "肯定的", "我覺得可行", "絕對OK", "是的", "確定", "200 OK", "100 Continue", "Just do it")
-
                 ans_s = (
                     "現在別問我", "404 Not Found", "你的問題超出宇宙的範圍了", "答案仍在變化", "400 Bad Request", "這問題實在沒人答得出來",
                     "Answer=A=Ans=答案",
