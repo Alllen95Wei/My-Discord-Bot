@@ -12,6 +12,7 @@ import detect_pc_status as dps
 
 client = discord.Client()
 localtime = time.localtime()
+BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
 
 @client.event
@@ -225,7 +226,6 @@ async def on_message(message):  # 有訊息時
 
 # 取得TOKEN
 env_path = "TOKEN.env"
-BASEDIR = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(dotenv_path=os.path.join(BASEDIR, "TOKEN.env"))
 TOKEN = str(os.getenv("TOKEN"))
 client.run(TOKEN)
