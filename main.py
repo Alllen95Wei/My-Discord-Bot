@@ -33,7 +33,7 @@ msg_send_channel = ""
 
 @client.event
 async def on_message(message):  # 有訊息時
-    global final_msg, msg_author, msg_count, msg_is_file, msg_send_channel
+    global final_msg, msg_author, msg_is_file, msg_send_channel
     if message.author == client.user:  # 排除自己的訊息，避免陷入無限循環
         return
     msg_in = message.content
@@ -219,13 +219,13 @@ async def on_message(message):  # 有訊息時
             new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
         log_writter.write_log(new_log)
     final_msg = []
-    msg_count = 1
     msg_is_file = False
     msg_send_channel = ""
 
 
 # 取得TOKEN
 env_path = "TOKEN.env"
-load_dotenv(dotenv_path=env_path)
-TOKEN = os.getenv("TOKEN")
+BASEDIR = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(dotenv_path=os.path.join(BASEDIR, "TOKEN.env"))
+TOKEN = str(os.getenv("TOKEN"))
 client.run(TOKEN)
