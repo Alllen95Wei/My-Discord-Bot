@@ -62,7 +62,8 @@ async def on_message(message):  # 有訊息時
                              "`changeatpl <bgm/normal>`：更換Allen Music Bot的自動播放清單\n"
                              "`ytdl <YouTube連結>`：下載YouTube的影片為mp3\n"
                              "`rc`：重新連接語音頻道「貓娘實驗室ww/音樂 (96kbps)」\n"
-                             "`dps`：查詢伺服器電腦的CPU及記憶體使用率"
+                             "`dps`：查詢伺服器電腦的CPU及記憶體使用率\n"
+                             "`ping`：查詢機器人的延遲(毫秒)"
                              "\n想得到更詳細的指令參數說明，直接輸入指令而不加參數即可\n試試看吧！")
         elif msg_in[2:5] == "ama":
             if len(msg_in) == 5:
@@ -194,6 +195,8 @@ async def on_message(message):  # 有訊息時
         elif msg_in[2:5] == "dps":
             act_msg = dps.pc_status()
             final_msg.append(act_msg)
+        elif msg_in[2:6] == "ping":
+            final_msg.append("目前延遲：" + str(round(client.latency * 1000)) + "ms")
         elif msg_in[2:3] == "y":
             if message.author == msg_author:
                 msg_author = ""
