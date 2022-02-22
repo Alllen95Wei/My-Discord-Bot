@@ -30,15 +30,27 @@ final_msg = []
 msg_author = ""
 msg_is_file = False
 msg_send_channel = ""
+testing = False
 
 
 @client.event
 async def on_message(message):  # 有訊息時
-    global final_msg, msg_author, msg_is_file, msg_send_channel
+    global final_msg, msg_author, msg_is_file, msg_send_channel, testing
+    msg_in = message.content
     if message.author == client.user:  # 排除自己的訊息，避免陷入無限循環
         return
-    msg_in = message.content
-    if msg_in[:2] == "a!":
+    elif msg_in == "a!test":
+        if testing:
+            testing = False
+            final_msg.append("測試模式已關閉。")
+        else:
+            testing = True
+            final_msg.append("測試模式已開啟。")
+        use_log = str(message.channel) + "/" + str(message.author) + ":\n" + msg_in + "\n\n"
+        log_writter.write_log(use_log)
+    elif testing:
+        return
+    elif msg_in[:2] == "a!":
         use_log = str(message.channel) + "/" + str(message.author) + ":\n" + msg_in + "\n\n"
         log_writter.write_log(use_log)
         await message.channel.send(message.author.mention)
