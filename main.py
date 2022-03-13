@@ -2,10 +2,11 @@ import os
 import time
 from random import randint
 import discord
+import subprocess
+
 import check_folder_size as cfs
 import change_autoplaylist as catpl
 from dotenv import load_dotenv
-
 import log_writter
 from youtube_to_mp3 import main_dl
 import detect_pc_status as dps
@@ -215,6 +216,24 @@ async def on_message(message):  # 有訊息時
                 final_msg.append(cfs.clean_folder())
             else:
                 final_msg.append("此回覆無效。")
+        elif msg_in[2:5] == "cmd":
+            if len(msg_in) == 5:
+                final_msg.append("```參數：\ncmd <指令>：在伺服器端執行指令並傳回結果。```")
+            else:
+                command = msg_in[6:]
+                if command == "cmd":
+                    final_msg.append("不能使用`cmd`指令。")
+                else:
+                    argument = command.split(" ")
+                    try:
+                        final_msg.append(
+                            "```" + subprocess.run(argument, capture_output=True, text=True).stdout + "```")
+                    except WindowsError as e:
+                        if "WinError 2" in str(e):
+                            final_msg.append("似乎沒有這個指令，或指令無法透過Python執行。")
+                            final_msg.append("錯誤內容：\n```" + str(e) + "```")
+                        else:
+                            final_msg.append("```" + str(e) + "```")
         else:
             final_msg.append("參數似乎無效...\n輸入`a!help`獲得說明")
     elif message.channel == client.get_channel(891665312028713001):
@@ -229,7 +248,7 @@ async def on_message(message):  # 有訊息時
     for i in range(len(final_msg)):
         if not msg_is_file:
             await msg_send_channel.send(final_msg[i])
-            new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + final_msg[i] + "\n\n"
+            new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg[i]) + "\n\n"
         else:
             await msg_send_channel.send(file=final_msg)
             new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
