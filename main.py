@@ -3,6 +3,7 @@ import time
 from random import randint
 import discord
 import subprocess
+import shlex
 
 import check_folder_size as cfs
 import change_autoplaylist as catpl
@@ -10,6 +11,7 @@ from dotenv import load_dotenv
 import log_writter
 from youtube_to_mp3 import main_dl
 import detect_pc_status as dps
+import git_update as gu
 
 client = discord.Client()
 localtime = time.localtime()
@@ -224,16 +226,19 @@ async def on_message(message):  # 有訊息時
                 if command == "cmd":
                     final_msg.append("不能使用`cmd`指令。")
                 else:
-                    argument = command.split(" ")
                     try:
+                        command = shlex.split(command)
                         final_msg.append(
-                            "```" + subprocess.run(argument, capture_output=True, text=True).stdout + "```")
+                            "```" + str(subprocess.run(command, capture_output=True, text=True).stdout) + "```")
                     except WindowsError as e:
                         if "WinError 2" in str(e):
                             final_msg.append("似乎沒有這個指令，或指令無法透過Python執行。")
                             final_msg.append("錯誤內容：\n```" + str(e) + "```")
                         else:
                             final_msg.append("```" + str(e) + "```")
+        elif msg_in[2:8] == "update":
+            if str(message.author) == "Allen Why#5877":
+                gu.update(os.getpid())
         else:
             final_msg.append("參數似乎無效...\n輸入`a!help`獲得說明")
     elif message.channel == client.get_channel(891665312028713001):
@@ -247,12 +252,19 @@ async def on_message(message):  # 有訊息時
         msg_send_channel = message.channel
     for i in range(len(final_msg)):
         if not msg_is_file:
-            await msg_send_channel.send(final_msg[i])
-            new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg[i]) + "\n\n"
+            try:
+                await msg_send_channel.send(final_msg[i])
+                new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg[i]) + "\n\n"
+                log_writter.write_log(new_log)
+            except Exception as e:
+                final_msg = "發生錯誤。錯誤內容如下：\n```" + str(e) + "```"
+                await msg_send_channel.send(final_msg)
+                new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
+                log_writter.write_log(new_log)
         else:
             await msg_send_channel.send(file=final_msg)
             new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
-        log_writter.write_log(new_log)
+            log_writter.write_log(new_log)
     final_msg = []
     msg_is_file = False
     msg_send_channel = ""
