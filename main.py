@@ -78,7 +78,8 @@ async def on_message(message):  # 有訊息時
                              "`ytdl <YouTube連結>`：下載YouTube的影片為mp3\n"
                              "`rc`：重新連接語音頻道「貓娘實驗室ww/音樂 (96kbps)」\n"
                              "`dps`：查詢伺服器電腦的CPU及記憶體使用率\n"
-                             "`ping`：查詢機器人的延遲(毫秒)"
+                             "`ping`：查詢機器人的延遲(毫秒)\n"
+                             "`cmd <指令>`：在伺服器端執行指令並傳回結果。"
                              "\n想得到更詳細的指令參數說明，直接輸入指令而不加參數即可\n試試看吧！")
         elif msg_in[2:5] == "ama":
             if len(msg_in) == 5:
@@ -219,23 +220,26 @@ async def on_message(message):  # 有訊息時
             else:
                 final_msg.append("此回覆無效。")
         elif msg_in[2:5] == "cmd":
-            if len(msg_in) == 5:
-                final_msg.append("```參數：\ncmd <指令>：在伺服器端執行指令並傳回結果。```")
-            else:
-                command = msg_in[6:]
-                if command == "cmd":
-                    final_msg.append("不能使用`cmd`指令。")
+            if str(message.author) == "Allen Why#5877":
+                if len(msg_in) == 5:
+                    final_msg.append("```參數：\ncmd <指令>：在伺服器端執行指令並傳回結果。```")
                 else:
-                    try:
-                        command = shlex.split(command)
-                        final_msg.append(
-                            "```" + str(subprocess.run(command, capture_output=True, text=True).stdout) + "```")
-                    except WindowsError as e:
-                        if "WinError 2" in str(e):
-                            final_msg.append("似乎沒有這個指令，或指令無法透過Python執行。")
-                            final_msg.append("錯誤內容：\n```" + str(e) + "```")
-                        else:
-                            final_msg.append("```" + str(e) + "```")
+                    command = msg_in[6:]
+                    if command == "cmd":
+                        final_msg.append("不能使用`cmd`指令。")
+                    else:
+                        try:
+                            command = shlex.split(command)
+                            final_msg.append(
+                                "```" + str(subprocess.run(command, capture_output=True, text=True).stdout) + "```")
+                        except WindowsError as e:
+                            if "WinError 2" in str(e):
+                                final_msg.append("似乎沒有這個指令，或指令無法透過Python執行。")
+                                final_msg.append("錯誤內容：\n```" + str(e) + "```")
+                            else:
+                                final_msg.append("```" + str(e) + "```")
+            else:
+                final_msg.append("你無權使用此指令。")
         elif msg_in[2:8] == "update":
             if str(message.author) == "Allen Why#5877":
                 gu.update(os.getpid())
@@ -262,9 +266,15 @@ async def on_message(message):  # 有訊息時
                 new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
                 log_writter.write_log(new_log)
         else:
-            await msg_send_channel.send(file=final_msg)
-            new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
-            log_writter.write_log(new_log)
+            try:
+                await msg_send_channel.send(file=final_msg)
+                new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
+                log_writter.write_log(new_log)
+            except Exception as e:
+                final_msg = "發生錯誤。錯誤內容如下：\n```" + str(e) + "```"
+                await msg_send_channel.send(final_msg)
+                new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
+                log_writter.write_log(new_log)
     final_msg = []
     msg_is_file = False
     msg_send_channel = ""
