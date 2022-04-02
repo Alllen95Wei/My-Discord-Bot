@@ -56,7 +56,6 @@ async def on_message(message):  # 有訊息時
     elif msg_in[:2] == "a!":
         use_log = str(message.channel) + "/" + str(message.author) + ":\n" + msg_in + "\n\n"
         log_writter.write_log(use_log)
-        await message.channel.send(message.author.mention)
         if len(msg_in) == 2:
             final_msg.append("我在這！\n如果需要指令協助，請輸入`a!help`")
         elif msg_in[2:5] == "say":
@@ -261,10 +260,17 @@ async def on_message(message):  # 有訊息時
                 new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg[i]) + "\n\n"
                 log_writter.write_log(new_log)
             except Exception as e:
-                final_msg = "發生錯誤。錯誤內容如下：\n```" + str(e) + "```"
-                await msg_send_channel.send(final_msg)
-                new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
-                log_writter.write_log(new_log)
+                if "Must be 4000 or fewer in length." in str(e):
+                    txt_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'full_msg.txt')
+                    open(txt_file_path, "x").write(str(final_msg[i]))
+                    await msg_send_channel.send("由於訊息長度過長，因此改以文字檔方式呈現。", file=discord.File(txt_file_path))
+                    new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + "由於訊息長度過長，因此改以文字檔方式呈現。" + "\n\n"
+                    log_writter.write_log(new_log)
+                else:
+                    final_msg = "發生錯誤。錯誤內容如下：\n```" + str(e) + "```"
+                    await msg_send_channel.send(final_msg)
+                    new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
+                    log_writter.write_log(new_log)
         else:
             try:
                 await msg_send_channel.send(file=final_msg)
