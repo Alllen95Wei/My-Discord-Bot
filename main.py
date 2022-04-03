@@ -262,7 +262,7 @@ async def on_message(message):  # 有訊息時
             except Exception as e:
                 if "Must be 4000 or fewer in length." in str(e):
                     txt_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'full_msg.txt')
-                    open(txt_file_path, "x").write(str(final_msg[i]))
+                    open(txt_file_path, "w").write(str(final_msg[i]))
                     await msg_send_channel.send("由於訊息長度過長，因此改以文字檔方式呈現。", file=discord.File(txt_file_path))
                     new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + "由於訊息長度過長，因此改以文字檔方式呈現。" + "\n\n"
                     log_writter.write_log(new_log)
