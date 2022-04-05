@@ -2,3 +2,5 @@ discord
 python-dotenv
 youtube-dl
 psutil
+subprocess
+shlex
