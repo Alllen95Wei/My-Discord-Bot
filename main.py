@@ -12,6 +12,7 @@ import log_writter
 from youtube_to_mp3 import main_dl
 import detect_pc_status as dps
 import git_update as gu
+# import latency_check
 
 client = discord.Client()
 localtime = time.localtime()
@@ -253,8 +254,8 @@ async def on_message(message):  # 有訊息時
             log_writter.write_log(use_log)
     if msg_send_channel == "":
         msg_send_channel = message.channel
-    for i in range(len(final_msg)):
-        if not msg_is_file:
+    if not msg_is_file:
+        for i in range(len(final_msg)):
             try:
                 await msg_send_channel.send(final_msg[i])
                 new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg[i]) + "\n\n"
@@ -271,19 +272,29 @@ async def on_message(message):  # 有訊息時
                     await msg_send_channel.send(final_msg)
                     new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
                     log_writter.write_log(new_log)
-        else:
-            try:
-                await msg_send_channel.send(file=final_msg)
-                new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
-                log_writter.write_log(new_log)
-            except Exception as e:
-                final_msg = "發生錯誤。錯誤內容如下：\n```" + str(e) + "```"
-                await msg_send_channel.send(final_msg)
-                new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
-                log_writter.write_log(new_log)
+    else:
+        try:
+            await msg_send_channel.send(file=final_msg)
+            new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
+            log_writter.write_log(new_log)
+        except Exception as e:
+            final_msg = "發生錯誤。錯誤內容如下：\n```" + str(e) + "```"
+            await msg_send_channel.send(final_msg)
+            new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
+            log_writter.write_log(new_log)
     final_msg = []
     msg_is_file = False
     msg_send_channel = ""
+
+
+@client.event
+async def on_member_join(member):
+    channel = client.get_channel(857998355082903552)
+    welcome_msg = "歡迎<@" + str(member) + ">加入本伺服器！請稍待，直至伺服器管理員分配給你合適的身分組，即可與大家互動~🎵"
+    await channel.system_channel.send(welcome_msg)
+    new_log = str(channel) + "/" + str(client.user) + ":\n" + str(welcome_msg) + "\n\n"
+    log_writter.write_log(new_log)
+    # TODO: 測試此部分程式碼
 
 
 # 取得TOKEN
