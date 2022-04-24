@@ -229,8 +229,11 @@ async def on_message(message):  # 有訊息時
                     else:
                         try:
                             command = shlex.split(command)
-                            final_msg.append(
-                                "```" + str(subprocess.run(command, capture_output=True, text=True).stdout) + "```")
+                            command_output = str(subprocess.run(command, capture_output=True, text=True).stdout)
+                            if command_output != "":
+                                final_msg.append("```" + command_output + "```")
+                            else:
+                                final_msg.append("終端未傳回回應。")
                         except WindowsError as e:
                             if "WinError 2" in str(e):
                                 final_msg.append("似乎沒有這個指令，或指令無法透過Python執行。")
@@ -260,7 +263,7 @@ async def on_message(message):  # 有訊息時
                 new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg[i]) + "\n\n"
                 log_writter.write_log(new_log)
             except Exception as e:
-                if "Must be 4000 or fewer in length." in str(e):
+                if "or fewer in length." in str(e):
                     txt_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'full_msg.txt')
                     open(txt_file_path, "w").write(str(final_msg[i]))
                     await msg_send_channel.send("由於訊息長度過長，因此改以文字檔方式呈現。", file=discord.File(txt_file_path))
@@ -297,7 +300,6 @@ async def on_member_join(member):
 
 
 # 取得TOKEN
-env_path = "TOKEN.env"
 load_dotenv(dotenv_path=os.path.join(base_dir, "TOKEN.env"))
 TOKEN = str(os.getenv("TOKEN"))
 client.run(TOKEN)
