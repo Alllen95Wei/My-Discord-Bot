@@ -11,7 +11,6 @@ from dotenv import load_dotenv
 import log_writter
 from youtube_to_mp3 import main_dl
 import detect_pc_status as dps
-import git_update as gu
 # import latency_check
 
 client = discord.Client()
@@ -241,8 +240,8 @@ async def on_message(message):  # 有訊息時
             else:
                 final_msg.append("你無權使用此指令。")
         elif msg_in[2:8] == "update":
-            if str(message.author) == "Allen Why#5877":
-                gu.update(os.getpid())
+            # TODO: 將YuriBot的更新程式複製至此處
+            final_msg.append("此功能尚未提供。")
         else:
             final_msg.append("參數似乎無效...\n輸入`a!help`獲得說明")
     elif message.channel == client.get_channel(891665312028713001):

@@ -1,2 +1,2 @@
-cd %USERPROFILE%/PycharmProjects/Discord Bot(fix)
+cd %USERPROFILE%/PycharmProjects/My-Discord-Bot
 py "main.py"
