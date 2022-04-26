@@ -4,6 +4,7 @@ from random import randint
 import discord
 import subprocess
 import shlex
+from platform import system
 
 import check_folder_size as cfs
 import change_autoplaylist as catpl
@@ -11,7 +12,7 @@ from dotenv import load_dotenv
 import log_writter
 from youtube_to_mp3 import main_dl
 import detect_pc_status as dps
-# import latency_check
+import update
 
 client = discord.Client()
 localtime = time.localtime()
@@ -195,7 +196,7 @@ async def on_message(message):  # 有訊息時
                 yt_url = msg_in[7:]
                 file_name = str(message.author) + yt_url[-11:]
                 if main_dl(yt_url, file_name, file_name + ".mp3") == "finished":
-                    final_msg = discord.File(file_name + ".mp3")
+                    final_msg.append(discord.File(file_name + ".mp3"))
                     msg_is_file = True
         elif msg_in[2:4] == "rc":
             vc = client.get_channel(888707777659289660)
@@ -243,8 +244,11 @@ async def on_message(message):  # 有訊息時
             else:
                 final_msg.append("你無權使用此指令。")
         elif msg_in[2:8] == "update":
-            # TODO: 將YuriBot的更新程式複製至此處
-            final_msg.append("此功能尚未提供。")
+            if str(message.author) == str(client.get_user(657519721138094080)):
+                update.update(os.getpid(), system())
+                final_msg.append("已嘗試自GitHub取得更新，請稍候。")
+            else:
+                final_msg.append("你無權使用此指令。")
         else:
             final_msg.append("參數似乎無效...\n輸入`a!help`獲得說明")
     elif message.channel == client.get_channel(891665312028713001):
@@ -256,34 +260,29 @@ async def on_message(message):  # 有訊息時
             log_writter.write_log(use_log)
     if msg_send_channel == "":
         msg_send_channel = message.channel
-    if not msg_is_file:
-        for i in range(len(final_msg)):
-            try:
-                await msg_send_channel.send(final_msg[i])
-                new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg[i]) + "\n\n"
-                log_writter.write_log(new_log)
-            except Exception as e:
-                if "or fewer in length." in str(e):
-                    txt_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'full_msg.txt')
-                    open(txt_file_path, "w").write(str(final_msg[i]))
-                    await msg_send_channel.send("由於訊息長度過長，因此改以文字檔方式呈現。", file=discord.File(txt_file_path))
-                    new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + "由於訊息長度過長，因此改以文字檔方式呈現。" + "\n\n"
-                    log_writter.write_log(new_log)
-                else:
-                    final_msg = "發生錯誤。錯誤內容如下：\n```" + str(e) + "```"
-                    await msg_send_channel.send(final_msg)
-                    new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
-                    log_writter.write_log(new_log)
-    else:
+    for i in range(len(final_msg)):
+        current_msg = final_msg[i]
         try:
-            await msg_send_channel.send(file=final_msg)
-            new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
+            if isinstance(current_msg, str):
+                await msg_send_channel.send(current_msg)
+            elif isinstance(current_msg, discord.File):
+                await msg_send_channel.send(file=current_msg)
+            else:
+                await msg_send_channel.send("```" + str(current_msg) + "```")
+            new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg[i]) + "\n\n"
             log_writter.write_log(new_log)
         except Exception as e:
-            final_msg = "發生錯誤。錯誤內容如下：\n```" + str(e) + "```"
-            await msg_send_channel.send(final_msg)
-            new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
-            log_writter.write_log(new_log)
+            if "or fewer in length." in str(e):
+                txt_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'full_msg.txt')
+                open(txt_file_path, "w").write(str(final_msg[i]))
+                await msg_send_channel.send("由於訊息長度過長，因此改以文字檔方式呈現。", file=discord.File(txt_file_path))
+                new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + "由於訊息長度過長，因此改以文字檔方式呈現。" + "\n\n"
+                log_writter.write_log(new_log)
+            else:
+                final_msg = "發生錯誤。錯誤內容如下：\n```" + str(e) + "```"
+                await msg_send_channel.send(final_msg)
+                new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + str(final_msg) + "\n\n"
+                log_writter.write_log(new_log)
     final_msg = []
     msg_is_file = False
     msg_send_channel = ""
@@ -296,7 +295,6 @@ async def on_member_join(member):
     await channel.system_channel.send(welcome_msg)
     new_log = str(channel) + "/" + str(client.user) + ":\n" + str(welcome_msg) + "\n\n"
     log_writter.write_log(new_log)
-    # TODO: 測試此部分程式碼
 
 
 # 取得TOKEN
