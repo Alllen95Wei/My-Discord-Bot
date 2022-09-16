@@ -14,20 +14,21 @@ from youtube_to_mp3 import main_dl
 import detect_pc_status as dps
 import update
 
-client = discord.Client()
+client = discord.Client(intents=discord.Intents.all())
 localtime = time.localtime()
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
 
 @client.event
 async def on_ready():
-    music = discord.Activity(type=discord.ActivityType.listening, name="YOASOBI is soooooo great")
-    await client.change_presence(status=discord.Status.idle, activity=music)
+    music = discord.Activity(type=discord.ActivityType.playing, name="受到Discord.py 2.0殘害 目前大改中...")
+    await client.change_presence(status=discord.Status.do_not_disturb, activity=music)
     log_writter.write_log("-------------------------------------------------------------\n", True)
     log_writter.write_log("\n登入成功！\n目前登入身份：" +
                           str(client.user) + "\n以下為使用紀錄(只要開頭訊息有\"a!\"，則這則訊息和系統回應皆會被記錄)：\n\n")
-    vc = client.get_channel(888707777659289660)
-    await vc.connect()
+
+    # vc = client.get_channel(888707777659289660)
+    # await vc.connect(self_deaf=True, self_mute=True)
 
 
 final_msg = []
@@ -71,7 +72,7 @@ async def on_message(message):  # 有訊息時
                              "`ama <問題>`：給你這個問題的隨機回答\n"
                              "`random <範圍>`：在指定數字範圍隨機取得一數\n"
                              "`qrcode <文字>`：將輸入的文字轉換為QR Code\n"
-                             "`daily901 <new/channel/fb>`：得到關於「日常901」的資訊\n"
+                             # "`daily901 <new/channel/fb>`：得到關於「日常901」的資訊\n"
                              "`rickroll`：？？？\n"
                              "`sizecheck`：檢查`\"C:\\MusicBot\\audio_cache\"`的大小；當大小超過1500000000位元組時，清空該資料夾\n"
                              "`changeatpl <bgm/normal>`：更換Allen Music Bot的自動播放清單\n"
@@ -129,26 +130,6 @@ async def on_message(message):  # 有訊息時
                 final_msg.append(
                     "https://chart.apis.google.com/chart?cht=qr&chs=500x500&choe=UTF-8&chld=H|1&chl=" + text.replace(
                         "\'", ""))
-        elif msg_in[2:10] == "daily901":
-            if msg_in[11:] == "":
-                final_msg.append("```參數：\ndaily901 new：得到「日常901」的最新影片資訊及連結\n         channel：得到「日常901」的連結\n         "
-                                 "fb：得到「鮑哥粉絲團！！」的連結``` ")
-            else:
-                path = "daily901-info.txt"
-                if msg_in[11:14] == "new":
-                    try:
-                        openfile = open(path, mode="r", encoding="utf8")
-                        newest_video = openfile.read()
-                        openfile.close()
-                        final_msg.append("目前最新的影片為：\n**" + newest_video + "**\n\n還沒訂閱嗎？\nhttps://www.youtube.com"
-                                                                          "/channel/UCYo6tbHa4AxwStRqWWhaYhw"
-                                                                          "?sub_confirmation=1")
-                    except Exception as e:
-                        final_msg.append("```" + str(e) + "```")
-                if msg_in[11:18] == "channel":
-                    final_msg.append("日常901的頻道連結：https://www.youtube.com/channel/UCYo6tbHa4AxwStRqWWhaYhw")
-                if msg_in[11:13] == "fb":
-                    final_msg.append("鮑哥粉絲團的連結：https://fb.me/liyuan.baoge")
         elif msg_in[2:10] == "rickroll":
             channel = message.author.voice.channel
             try:
@@ -199,15 +180,22 @@ async def on_message(message):  # 有訊息時
                     final_msg.append(discord.File(file_name + ".mp3"))
                     msg_is_file = True
         elif msg_in[2:4] == "rc":
-            vc = client.get_channel(888707777659289660)
+            channel_id = msg_in[5:]
             try:
-                await vc.connect()
-                final_msg.append("已嘗試加入「貓娘實驗室ww/音樂 (96kbps)」。")
+                vc = client.get_channel(int(channel_id))
+                try:
+                    await vc.connect(self_mute=True, self_deaf=True)
+                    final_msg.append("已嘗試加入「{0}」。".format(client.get_channel(int(channel_id))))
+                except Exception as e:
+                    if str(e) == "Already connected to a voice channel.":
+                        final_msg.append("已經連線至語音頻道。")
+                    else:
+                        final_msg.append("```" + str(e) + "```")
+            except ValueError as VE:
+                final_msg.append("參數錯誤：請貼上該頻道的ID！")
+                final_msg.append("```" + str(VE) + "```")
             except Exception as e:
-                if str(e) == "Already connected to a voice channel.":
-                    final_msg.append("已經連線至語音頻道。")
-                else:
-                    final_msg.append("```" + str(e) + "```")
+                final_msg.append("```" + str(e) + "```")
         elif msg_in[2:5] == "dps":
             act_msg = dps.pc_status()
             final_msg.append(act_msg)
@@ -220,7 +208,7 @@ async def on_message(message):  # 有訊息時
             else:
                 final_msg.append("此回覆無效。")
         elif msg_in[2:5] == "cmd":
-            if str(message.author) == "Allen Why#5877":
+            if message.author == client.get_user(657519721138094080):
                 if len(msg_in) == 5:
                     final_msg.append("```參數：\ncmd <指令>：在伺服器端執行指令並傳回結果。```")
                 else:
@@ -244,7 +232,7 @@ async def on_message(message):  # 有訊息時
             else:
                 final_msg.append("你無權使用此指令。")
         elif msg_in[2:8] == "update":
-            if str(message.author) == str(client.get_user(657519721138094080)):
+            if message.author == client.get_user(657519721138094080):
                 update.update(os.getpid(), system())
                 final_msg.append("已嘗試自GitHub取得更新，請稍候。")
             else:
@@ -289,12 +277,12 @@ async def on_message(message):  # 有訊息時
 
 
 @client.event
-async def on_member_join(member):
-    channel = client.get_channel(857998355082903552)
-    welcome_msg = "歡迎<@" + str(member) + ">加入本伺服器！請稍待，直至伺服器管理員分配給你合適的身分組，即可與大家互動~🎵"
-    await channel.system_channel.send(welcome_msg)
-    new_log = str(channel) + "/" + str(client.user) + ":\n" + str(welcome_msg) + "\n\n"
-    log_writter.write_log(new_log)
+async def on_member_join(guild, member):
+    if guild.system_channel:
+        welcome_msg = "歡迎<@" + str(member) + ">加入本伺服器！請稍待，直至伺服器管理員分配給你合適的身分組，即可與大家互動~🎵"
+        await guild.system_channel.send(welcome_msg)
+        new_log = str(guild.system_channel) + "/" + str(client.user) + ":\n" + str(welcome_msg) + "\n\n"
+        log_writter.write_log(new_log)
 
 
 # 取得TOKEN

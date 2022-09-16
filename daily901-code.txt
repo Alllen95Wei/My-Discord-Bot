@@ -1,0 +1,20 @@
+# elif msg_in[2:10] == "daily901":
+            # if msg_in[11:] == "":
+            #     final_msg.append("```參數：\ndaily901 new：得到「日常901」的最新影片資訊及連結\n         channel：得到「日常901」的連結\n         "
+                                 "fb：得到「鮑哥粉絲團！！」的連結``` ")
+            # else:
+                # path = "daily901-info.txt"
+                # if msg_in[11:14] == "new":
+                    # try:
+                        # openfile = open(path, mode="r", encoding="utf8")
+                        # newest_video = openfile.read()
+                        # openfile.close()
+                        # final_msg.append("目前最新的影片為：\n**" + newest_video + "**\n\n還沒訂閱嗎？\nhttps://www.youtube.com"
+                        #                                                   "/channel/UCYo6tbHa4AxwStRqWWhaYhw"
+                        #                                                   "?sub_confirmation=1")
+                    # except Exception as e:
+                        # final_msg.append("```" + str(e) + "```")
+                # if msg_in[11:18] == "channel":
+                    # final_msg.append("日常901的頻道連結：https://www.youtube.com/channel/UCYo6tbHa4AxwStRqWWhaYhw")
+                # if msg_in[11:13] == "fb":
+                    # final_msg.append("鮑哥粉絲團的連結：https://fb.me/liyuan.baoge")
