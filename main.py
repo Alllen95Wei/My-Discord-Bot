@@ -26,9 +26,15 @@ async def on_ready():
     log_writter.write_log("-------------------------------------------------------------\n", True)
     log_writter.write_log("\n登入成功！\n目前登入身份：" +
                           str(client.user) + "\n以下為使用紀錄(只要開頭訊息有\"a!\"，則這則訊息和系統回應皆會被記錄)：\n\n")
-
-    # vc = client.get_channel(888707777659289660)
-    # await vc.connect(self_deaf=True, self_mute=True)
+    voice_channel_lists = []
+    for server in client.guilds:
+        for channel in server.channels:
+            if channel.type == discord.ChannelType.voice:
+                voice_channel_lists.append(channel)
+                print(server.name + "/" + channel.name)
+                members = channel.members
+                for member in members:
+                    print("   ⌊" + member.name)
 
 
 final_msg = []
@@ -242,6 +248,9 @@ async def on_message(message):  # 有訊息時
     elif message.channel == client.get_channel(891665312028713001):
         if "https://www.youtube.com" == msg_in[:23] or "https://youtu.be" == msg_in[:16] or "https://open.spotify.com" \
                 == msg_in[:24]:
+            if "&list=" in msg_in:
+                msg_in = msg_in[:msg_in.find("&list=")]
+                final_msg.append("<@{0}> 已將清單連結轉換為單一影片連結。".format(message.author.id))
             ap_cmd = "ap!p " + msg_in
             final_msg.append(ap_cmd)
             use_log = str(message.channel) + "/" + str(message.author) + ":\n" + msg_in + "\n\n"
