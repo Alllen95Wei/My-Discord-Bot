@@ -1,4 +1,5 @@
 discord
+pynacl
 python-dotenv
 youtube-dl
 psutil

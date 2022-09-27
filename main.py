@@ -35,6 +35,15 @@ async def on_ready():
                 members = channel.members
                 for member in members:
                     print("   ⌊" + member.name)
+                    if member == client.get_user(657519721138094080) or member == client.get_user(885723595626676264):
+                        try:
+                            await client.get_channel(channel.id).connect(self_mute=True, self_deaf=True)
+                            log_writter.write_log("加入語音頻道：" + server.name + "/" + channel.name + "\n")
+                        except Exception as e:
+                            log_writter.write_log("加入語音頻道失敗：" + server.name + "/" + channel.name + "\n")
+                            log_writter.write_log("錯誤訊息：" + str(e) + "\n")
+                        finally:
+                            break
 
 
 final_msg = []
