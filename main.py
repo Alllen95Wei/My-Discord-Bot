@@ -141,10 +141,10 @@ async def on_message(message):  # 有訊息時
             if len(msg_in) == 8:
                 final_msg.append("```參數：\nqrcode <文字>：將輸入的文字轉換為QR Code```")
             else:
-                text = msg_in[9:]
+                import urllib.parse
+                text = urllib.parse.quote(msg_in[9:])
                 final_msg.append(
-                    "https://chart.apis.google.com/chart?cht=qr&chs=500x500&choe=UTF-8&chld=H|1&chl=" + text.replace(
-                        "\'", ""))
+                    "https://chart.apis.google.com/chart?cht=qr&chs=500x500&choe=UTF-8&chld=H|1&chl=" + text)
         elif msg_in[2:10] == "rickroll":
             channel = message.author.voice.channel
             try:
