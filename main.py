@@ -21,8 +21,8 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 
 @client.event
 async def on_ready():
-    music = discord.Activity(type=discord.ActivityType.playing, name="受到Discord.py 2.0殘害 目前大改中...")
-    await client.change_presence(status=discord.Status.do_not_disturb, activity=music)
+    music = discord.Activity(type=discord.ActivityType.playing, name="修正完成！(狂喜)")
+    await client.change_presence(status=discord.Status.online, activity=music)
     log_writter.write_log("-------------------------------------------------------------\n", True)
     log_writter.write_log("\n登入成功！\n目前登入身份：" +
                           str(client.user) + "\n以下為使用紀錄(只要開頭訊息有\"a!\"，則這則訊息和系統回應皆會被記錄)：\n\n")
@@ -284,6 +284,7 @@ async def on_message(message):  # 有訊息時
                 await msg_send_channel.send("由於訊息長度過長，因此改以文字檔方式呈現。", file=discord.File(txt_file_path))
                 new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + "由於訊息長度過長，因此改以文字檔方式呈現。" + "\n\n"
                 log_writter.write_log(new_log)
+                os.remove("full_msg.txt")
             else:
                 final_msg = "發生錯誤。錯誤內容如下：\n```" + str(e) + "```"
                 await msg_send_channel.send(final_msg)
