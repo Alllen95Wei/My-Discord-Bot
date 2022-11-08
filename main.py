@@ -95,7 +95,9 @@ async def on_message(message):  # 有訊息時
                              "`rc`：重新連接語音頻道「貓娘實驗室ww/音樂 (96kbps)」\n"
                              "`dps`：查詢伺服器電腦的CPU及記憶體使用率\n"
                              "`ping`：查詢機器人的延遲(毫秒)\n"
-                             "`cmd <指令>`：在伺服器端執行指令並傳回結果。"
+                             "`cmd <指令>`：在伺服器端執行指令並傳回結果"
+                             "`rc <頻道ID>`：將機器人連接至指定語音頻道"
+                             "`dc`：將機器人從語音頻道中斷連接"
                              "\n想得到更詳細的指令參數說明，直接輸入指令而不加參數即可\n試試看吧！")
         elif msg_in[2:5] == "ama":
             if len(msg_in) == 5:
@@ -216,6 +218,12 @@ async def on_message(message):  # 有訊息時
             final_msg.append(act_msg)
         elif msg_in[2:6] == "ping":
             final_msg.append("目前延遲：" + str(round(client.latency * 1000)) + "ms")
+        elif msg_in[2:4] == "dc":
+            try:
+                await message.guild.voice_client.disconnect()
+                final_msg.append("已嘗試斷開連線。")
+            except Exception as e:
+                final_msg.append("```" + str(e) + "```")
         elif msg_in[2:3] == "y":
             if message.author == msg_author:
                 msg_author = ""
