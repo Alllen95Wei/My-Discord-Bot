@@ -104,11 +104,14 @@ async def on_message(message):  # 有訊息時
                 final_msg.append("```參數：\nama <問題>：就是8號球，給你這個問題的隨機回答```")
             else:
                 ans1 = ("g", "s", "b")
-                ans_g = ("看起來不錯喔", "肯定的", "我覺得可行", "絕對OK", "是的", "確定", "200 OK", "100 Continue", "Just do it")
+                ans_g = ("看起來不錯喔", "肯定的", "我覺得可行", "絕對OK", "是的", "確定", "200 OK", "100 Continue",
+                         "Just do it")
                 ans_s = (
-                    "現在別問我", "404 Not Found", "你的問題超出宇宙的範圍了", "答案仍在變化", "400 Bad Request", "這問題實在沒人答得出來",
+                    "現在別問我", "404 Not Found", "你的問題超出宇宙的範圍了", "答案仍在變化", "400 Bad Request",
+                    "這問題實在沒人答得出來",
                     "Answer=A=Ans=答案",
-                    "最好不要現在告訴你", "300 Multiple Choices", "去問瑪卡巴卡更快", "您撥的電話無人接聽，嘟聲後開始計費。", "對不起，您播的號碼是空號，請查明後再撥。")
+                    "最好不要現在告訴你", "300 Multiple Choices", "去問瑪卡巴卡更快",
+                    "您撥的電話無人接聽，嘟聲後開始計費。", "對不起，您播的號碼是空號，請查明後再撥。")
 
                 ans_b = (
                     "不可能", "否定的", "不值得", "等等等等", "No no no", "我拒絕", "我覺得不行耶",
@@ -289,8 +292,10 @@ async def on_message(message):  # 有訊息時
             if "or fewer in length." in str(e):
                 txt_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'full_msg.txt')
                 open(txt_file_path, "w").write(str(final_msg[i]))
-                await msg_send_channel.send("由於訊息長度過長，因此改以文字檔方式呈現。", file=discord.File(txt_file_path))
-                new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + "由於訊息長度過長，因此改以文字檔方式呈現。" + "\n\n"
+                await msg_send_channel.send("由於訊息長度過長，因此改以文字檔方式呈現。",
+                                            file=discord.File(txt_file_path))
+                new_log = str(msg_send_channel) + "/" + str(
+                    client.user) + ":\n" + "由於訊息長度過長，因此改以文字檔方式呈現。" + "\n\n"
                 log_writter.write_log(new_log)
                 os.remove("full_msg.txt")
             else:
