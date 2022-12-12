@@ -9,7 +9,7 @@ def youtube_download(url, file_name):
         'nocheckcertificate': True,
         'logtostderr': False,
         'default_search': 'auto',
-        'usenetrc': True,
+        'usenetrc': False,
         "fixup": "detect_or_warn"
     }
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
