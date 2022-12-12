@@ -19,13 +19,7 @@ localtime = time.localtime()
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
 
-@client.event
-async def on_ready():
-    music = discord.Activity(type=discord.ActivityType.playing, name="受到Discord.py 2.0殘害 目前大改中...")
-    await client.change_presence(status=discord.Status.do_not_disturb, activity=music)
-    log_writter.write_log("-------------------------------------------------------------\n", True)
-    log_writter.write_log("\n登入成功！\n目前登入身份：" +
-                          str(client.user) + "\n以下為使用紀錄(只要開頭訊息有\"a!\"，則這則訊息和系統回應皆會被記錄)：\n\n")
+async def check_voice_channel():
     voice_channel_lists = []
     for server in client.guilds:
         for channel in server.channels:
@@ -44,6 +38,16 @@ async def on_ready():
                             log_writter.write_log("錯誤訊息：" + str(e) + "\n")
                         finally:
                             break
+
+
+@client.event
+async def on_ready():
+    music = discord.Activity(type=discord.ActivityType.playing, name="受到Discord.py 2.0殘害 目前大改中...")
+    await client.change_presence(status=discord.Status.do_not_disturb, activity=music)
+    log_writter.write_log("-------------------------------------------------------------\n", True)
+    log_writter.write_log("\n登入成功！\n目前登入身份：" +
+                          str(client.user) + "\n以下為使用紀錄(只要開頭訊息有\"a!\"，則這則訊息和系統回應皆會被記錄)：\n\n")
+    await check_voice_channel()
 
 
 final_msg = []
@@ -92,10 +96,11 @@ async def on_message(message):  # 有訊息時
                              "`sizecheck`：檢查`\"C:\\MusicBot\\audio_cache\"`的大小；當大小超過1500000000位元組時，清空該資料夾\n"
                              "`changeatpl <bgm/normal>`：更換Allen Music Bot的自動播放清單\n"
                              "`ytdl <YouTube連結>`：下載YouTube的影片為mp3\n"
-                             "`rc`：重新連接語音頻道「貓娘實驗室ww/音樂 (96kbps)」\n"
+                             "`rc [ID]`：重新連接至語音頻道。可指定頻道ID，否則將自動檢測音樂機器人及Allen Why在哪個頻道\n"
                              "`dps`：查詢伺服器電腦的CPU及記憶體使用率\n"
                              "`ping`：查詢機器人的延遲(毫秒)\n"
-                             "`cmd <指令>`：在伺服器端執行指令並傳回結果。"
+                             "`dc`：嘗試從目前的語音頻道中斷連接\n"
+                             "`cmd <指令>`：在伺服器端執行指令並傳回結果"
                              "\n想得到更詳細的指令參數說明，直接輸入指令而不加參數即可\n試試看吧！")
         elif msg_in[2:5] == "ama":
             if len(msg_in) == 5:
@@ -196,21 +201,24 @@ async def on_message(message):  # 有訊息時
                     msg_is_file = True
         elif msg_in[2:4] == "rc":
             channel_id = msg_in[5:]
-            try:
-                vc = client.get_channel(int(channel_id))
+            if channel_id != "":
                 try:
-                    await vc.connect(self_mute=True, self_deaf=True)
-                    final_msg.append("已嘗試加入「{0}」。".format(client.get_channel(int(channel_id))))
+                    vc = client.get_channel(int(channel_id))
+                    try:
+                        await vc.connect(self_mute=True, self_deaf=True)
+                        final_msg.append("已嘗試加入「{0}」。".format(client.get_channel(int(channel_id))))
+                    except Exception as e:
+                        if str(e) == "Already connected to a voice channel.":
+                            final_msg.append("已經連線至語音頻道。")
+                        else:
+                            final_msg.append("```" + str(e) + "```")
+                except ValueError as VE:
+                    final_msg.append("參數錯誤：請貼上該頻道的ID！")
+                    final_msg.append("```" + str(VE) + "```")
                 except Exception as e:
-                    if str(e) == "Already connected to a voice channel.":
-                        final_msg.append("已經連線至語音頻道。")
-                    else:
-                        final_msg.append("```" + str(e) + "```")
-            except ValueError as VE:
-                final_msg.append("參數錯誤：請貼上該頻道的ID！")
-                final_msg.append("```" + str(VE) + "```")
-            except Exception as e:
-                final_msg.append("```" + str(e) + "```")
+                    final_msg.append("```" + str(e) + "```")
+            else:
+                await check_voice_channel()
         elif msg_in[2:5] == "dps":
             act_msg = dps.pc_status()
             final_msg.append(act_msg)
@@ -246,6 +254,13 @@ async def on_message(message):  # 有訊息時
                                 final_msg.append("```" + str(e) + "```")
             else:
                 final_msg.append("你無權使用此指令。")
+        elif msg_in[2:4] == "dc":
+            try:
+                await message.guild.voice_client.disconnect()
+                final_msg.append("已嘗試離開語音頻道。")
+            except Exception as e:
+                final_msg.append("中斷連接時發生問題。機器人目前是否有連接到語音頻道？")
+                final_msg.append("```" + str(e) + "```")
         elif msg_in[2:8] == "update":
             if message.author == client.get_user(657519721138094080):
                 update.update(os.getpid(), system())
