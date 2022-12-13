@@ -43,8 +43,8 @@ async def check_voice_channel():
 
 @client.event
 async def on_ready():
-    music = discord.Activity(type=discord.ActivityType.playing, name="受到Discord.py 2.0殘害 目前大改中...")
-    await client.change_presence(status=discord.Status.do_not_disturb, activity=music)
+    music = discord.Activity(type=discord.ActivityType.playing, name="修正完成！(狂喜)")
+    await client.change_presence(status=discord.Status.online, activity=music)
     log_writter.write_log("-------------------------------------------------------------\n", True)
     log_writter.write_log("\n登入成功！\n目前登入身份：" +
                           str(client.user) + "\n以下為使用紀錄(只要開頭訊息有\"a!\"，則這則訊息和系統回應皆會被記錄)：\n\n")
