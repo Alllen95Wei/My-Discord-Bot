@@ -28,16 +28,17 @@ async def check_voice_channel():
                 voice_channel_lists.append(channel)
                 print(server.name + "/" + channel.name)
                 members = channel.members
+                msg = ""
                 for member in members:
                     print("   ⌊" + member.name)
                     if member == client.get_user(657519721138094080) or member == client.get_user(885723595626676264):
                         try:
                             await client.get_channel(channel.id).connect(self_mute=True, self_deaf=True)
-                            return "加入語音頻道：" + server.name + "/" + channel.name
+                            msg = "加入語音頻道：" + server.name + "/" + channel.name
                         except Exception as e:
-                            return "加入語音頻道失敗：" + server.name + "/" + channel.name + "(" + str(e) + ")"
+                            msg = "加入語音頻道失敗：" + server.name + "/" + channel.name + "(" + str(e) + ")"
                         finally:
-                            break
+                            return msg
 
 
 @client.event
