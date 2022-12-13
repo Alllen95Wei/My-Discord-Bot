@@ -1,5 +1,4 @@
-discord
+discord>=2.0.0
 pynacl
-python-dotenv
-youtube-dl
-psutil
+python-dotenv==0.21.0
+requests

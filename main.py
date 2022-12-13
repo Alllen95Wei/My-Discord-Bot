@@ -5,6 +5,7 @@ import discord
 import subprocess
 import shlex
 from platform import system
+import requests
 
 import check_folder_size as cfs
 import change_autoplaylist as catpl
@@ -32,10 +33,9 @@ async def check_voice_channel():
                     if member == client.get_user(657519721138094080) or member == client.get_user(885723595626676264):
                         try:
                             await client.get_channel(channel.id).connect(self_mute=True, self_deaf=True)
-                            log_writter.write_log("加入語音頻道：" + server.name + "/" + channel.name + "\n")
+                            return "加入語音頻道：" + server.name + "/" + channel.name
                         except Exception as e:
-                            log_writter.write_log("加入語音頻道失敗：" + server.name + "/" + channel.name + "\n")
-                            log_writter.write_log("錯誤訊息：" + str(e) + "\n")
+                            return "加入語音頻道失敗：" + server.name + "/" + channel.name + "(" + str(e) + ")"
                         finally:
                             break
 
@@ -47,7 +47,7 @@ async def on_ready():
     log_writter.write_log("-------------------------------------------------------------\n", True)
     log_writter.write_log("\n登入成功！\n目前登入身份：" +
                           str(client.user) + "\n以下為使用紀錄(只要開頭訊息有\"a!\"，則這則訊息和系統回應皆會被記錄)：\n\n")
-    await check_voice_channel()
+    log_writter.write_log(await check_voice_channel())
 
 
 final_msg = []
@@ -64,12 +64,17 @@ async def on_message(message):  # 有訊息時
     if message.author == client.user:  # 排除自己的訊息，避免陷入無限循環
         return
     elif msg_in == "a!test":
+        ip = ""
+        try:
+            ip = requests.get("https://api.ipify.org").text
+        except Exception as e:
+            ip = "無法取得IP：" + str(e)
         if testing:
             testing = False
-            final_msg.append("測試模式已關閉。")
+            final_msg.append("測試模式已關閉。({0})".format(ip))
         else:
             testing = True
-            final_msg.append("測試模式已開啟。")
+            final_msg.append("測試模式已開啟。({0})".format(ip))
         use_log = str(message.channel) + "/" + str(message.author) + ":\n" + msg_in + "\n\n"
         log_writter.write_log(use_log)
     elif testing:
@@ -206,7 +211,7 @@ async def on_message(message):  # 有訊息時
                     vc = client.get_channel(int(channel_id))
                     try:
                         await vc.connect(self_mute=True, self_deaf=True)
-                        final_msg.append("已嘗試加入「{0}」。".format(client.get_channel(int(channel_id))))
+                        final_msg.append("加入語音頻道：{0}".format(client.get_channel(int(channel_id))))
                     except Exception as e:
                         if str(e) == "Already connected to a voice channel.":
                             final_msg.append("已經連線至語音頻道。")
@@ -218,7 +223,7 @@ async def on_message(message):  # 有訊息時
                 except Exception as e:
                     final_msg.append("```" + str(e) + "```")
             else:
-                await check_voice_channel()
+                final_msg.append(await check_voice_channel())
         elif msg_in[2:5] == "dps":
             act_msg = dps.pc_status()
             final_msg.append(act_msg)
