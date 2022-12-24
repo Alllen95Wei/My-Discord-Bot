@@ -15,7 +15,9 @@ from youtube_to_mp3 import main_dl
 import detect_pc_status as dps
 import update
 
-client = discord.Client(intents=discord.Intents.all())
+intents = discord.Intents.all()
+intents.members = True
+client = discord.Client(intents=intents)
 localtime = time.localtime()
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -35,10 +37,10 @@ async def check_voice_channel():
                         try:
                             await client.get_channel(channel.id).connect(self_mute=True, self_deaf=True)
                             msg = "加入語音頻道：" + server.name + "/" + channel.name
+                            log_writter.write_log(msg)
                         except Exception as e:
                             msg = "加入語音頻道失敗：" + server.name + "/" + channel.name + "(" + str(e) + ")"
-                        finally:
-                            return msg
+                            log_writter.write_log(msg)
 
 
 @client.event
@@ -48,7 +50,23 @@ async def on_ready():
     log_writter.write_log("-------------------------------------------------------------\n", True)
     log_writter.write_log("\n登入成功！\n目前登入身份：" +
                           str(client.user) + "\n以下為使用紀錄(只要開頭訊息有\"a!\"，則這則訊息和系統回應皆會被記錄)：\n\n")
-    log_writter.write_log(await check_voice_channel())
+    await check_voice_channel()
+
+
+@client.event
+async def on_member_join(member):
+    msg = "歡迎 **" + member.name + "** 加入 __" + member.guild.name + "__ ！"
+    await member.guild.system_channel.send(msg)
+    log = str(member.guild.system_channel + "/" + str(client.user) + ":\n" + msg)
+    log_writter.write_log(log)
+
+
+@client.event
+async def on_member_remove(member):
+    msg = "**" + member.name + "** 離開了 __" + member.guild.name + "__ ..."
+    await member.guild.system_channel.send(msg)
+    log = str(member.guild.system_channel + "/" + str(client.user) + ":\n" + msg)
+    log_writter.write_log(log)
 
 
 final_msg = []
