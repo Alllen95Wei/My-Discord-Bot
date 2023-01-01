@@ -133,7 +133,7 @@ async def on_message(message):  # 有訊息時
                              "`qrcode <文字>`：將輸入的文字轉換為QR Code\n"
                              # "`daily901 <new/channel/fb>`：得到關於「日常901」的資訊\n"
                              "`rickroll`：？？？\n"
-                             "`sizecheck`：檢查`\"C:\\MusicBot\\audio_cache\"`的大小；當大小超過1500000000位元組時，清空該資料夾\n"
+                             "`sizecheck`：檢查`\"C:\\MusicBot\\audio_cache\"`的大小\n"
                              "`changeatpl <bgm/normal>`：更換Allen Music Bot的自動播放清單\n"
                              "`ytdl <YouTube連結>`：下載YouTube的影片為mp3\n"
                              "`rc [ID]`：重新連接至語音頻道。可指定頻道ID，否則將自動檢測音樂機器人及Allen Why在哪個頻道\n"
@@ -208,14 +208,6 @@ async def on_message(message):  # 有訊息時
             elif message.author == client.get_user(657519721138094080) or message.guild.owner:
                 final_msg.append(cfs.check_size())
                 msg_author = message.author
-            else:
-                final_msg.append("你無權使用此指令。")
-        elif msg_in[2:8] == "runmsb":
-            if "Direct Message" in str(message.channel):
-                final_msg.append("不能在私人訊息使用此指令。請至伺服器使用此指令。")
-            elif message.author == client.get_user(657519721138094080) or message.guild.owner:
-                os.system("C:\\MusicBot\\run.bat")
-                final_msg.append("已嘗試執行Allen Music Bot。")
             else:
                 final_msg.append("你無權使用此指令。")
         elif msg_in[2:12] == "changeatpl":
