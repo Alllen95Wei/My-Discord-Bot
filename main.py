@@ -133,13 +133,13 @@ async def on_message(message):  # 有訊息時
                              "`qrcode <文字>`：將輸入的文字轉換為QR Code\n"
                              # "`daily901 <new/channel/fb>`：得到關於「日常901」的資訊\n"
                              "`rickroll`：？？？\n"
-                             "`sizecheck`：檢查`\"C:\\MusicBot\\audio_cache\"`的大小\n"
-                             "`changeatpl <bgm/normal>`：更換Allen Music Bot的自動播放清單\n"
                              "`ytdl <YouTube連結>`：下載YouTube的影片為mp3\n"
                              "`rc [ID]`：重新連接至語音頻道。可指定頻道ID，否則將自動檢測音樂機器人及Allen Why在哪個頻道\n"
-                             "`dps`：查詢伺服器電腦的CPU及記憶體使用率\n"
-                             "`ping`：查詢機器人的延遲(毫秒)\n"
                              "`dc`：嘗試從目前的語音頻道中斷連接\n"
+                             "`ping`：查詢機器人的延遲(毫秒)\n"
+                             "`dps`：查詢伺服器電腦的CPU及記憶體使用率\n"
+                             "`sizecheck`：檢查`\"C:\\MusicBot\\audio_cache\"`的大小\n"
+                             "`changeatpl <bgm/normal>`：更換Allen Music Bot的自動播放清單\n"
                              "`cmd <指令>`：在伺服器端執行指令並傳回結果"
                              "\n想得到更詳細的指令參數說明，直接輸入指令而不加參數即可\n試試看吧！")
         elif msg_in[2:5] == "ama":
@@ -300,8 +300,9 @@ async def on_message(message):  # 有訊息時
             if message.author == client.get_user(657519721138094080):
                 owner = client.get_user(657519721138094080)
                 await owner.send("更新流程啟動。")
+                event = discord.Activity(type=discord.ActivityType.playing, name="更新中...")
+                await client.change_presence(status=discord.Status.dnd, activity=event)
                 update.update(os.getpid(), system())
-                final_msg.append("已嘗試自GitHub取得更新，請稍候。")
             else:
                 final_msg.append("你無權使用此指令。")
         else:
