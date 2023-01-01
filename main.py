@@ -59,6 +59,17 @@ async def on_member_join(member):
     await member.guild.system_channel.send(msg)
     log = str(member.guild.system_channel + "/" + str(client.user) + ":\n" + msg)
     log_writter.write_log(log)
+    new_member = await client.fetch_user(member.id)
+    embed = discord.Embed(
+        title="歡迎加入 " + member.guild.name + " ！",
+        description="請到[這裡](https://discord.com/channels/857996539262402570/858373026960637962)查看頻道介紹。",
+        color=0x57c2ea)
+    await new_member.send(embed=embed)
+    embed = discord.Embed(
+        title="在開始之前...",
+        description="什麼頻道都沒看到嗎？這是因為你**並未被分配身分組**。但是放心，我們會盡快確認你的身分，到時你就能加入我們了！",
+        color=0x57c2ea)
+    await new_member.send(embed=embed)
 
 
 @client.event
@@ -82,7 +93,7 @@ async def on_message(message):  # 有訊息時
     msg_in = message.content
     if message.author == client.user:  # 排除自己的訊息，避免陷入無限循環
         return
-    elif msg_in == "a!test":
+    elif msg_in == "a!test" and message.author == client.get_user(657519721138094080):
         ip = ""
         try:
             ip = requests.get("https://api.ipify.org").text
@@ -131,11 +142,14 @@ async def on_message(message):  # 有訊息時
                 final_msg.append("```參數：\nama <問題>：就是8號球，給你這個問題的隨機回答```")
             else:
                 ans1 = ("g", "s", "b")
-                ans_g = ("看起來不錯喔", "肯定的", "我覺得可行", "絕對OK", "是的", "確定", "200 OK", "100 Continue", "Just do it")
+                ans_g = ("看起來不錯喔", "肯定的", "我覺得可行", "絕對OK", "是的", "確定", "200 OK", "100 Continue",
+                         "Just do it")
                 ans_s = (
-                    "現在別問我", "404 Not Found", "你的問題超出宇宙的範圍了", "答案仍在變化", "400 Bad Request", "這問題實在沒人答得出來",
+                    "現在別問我", "404 Not Found", "你的問題超出宇宙的範圍了", "答案仍在變化", "400 Bad Request",
+                    "這問題實在沒人答得出來",
                     "Answer=A=Ans=答案",
-                    "最好不要現在告訴你", "300 Multiple Choices", "去問瑪卡巴卡更快", "您撥的電話無人接聽，嘟聲後開始計費。", "對不起，您播的號碼是空號，請查明後再撥。")
+                    "最好不要現在告訴你", "300 Multiple Choices", "去問瑪卡巴卡更快",
+                    "您撥的電話無人接聽，嘟聲後開始計費。", "對不起，您播的號碼是空號，請查明後再撥。")
 
                 ans_b = (
                     "不可能", "否定的", "不值得", "等等等等", "No no no", "我拒絕", "我覺得不行耶",
@@ -320,9 +334,11 @@ async def on_message(message):  # 有訊息時
             if "or fewer in length." in str(e):
                 txt_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'full_msg.txt')
                 open(txt_file_path, "w").write(str(final_msg[i]))
-                await msg_send_channel.send("由於訊息長度過長，因此改以文字檔方式呈現。", file=discord.File(txt_file_path))
+                await msg_send_channel.send("由於訊息長度過長，因此改以文字檔方式呈現。",
+                                            file=discord.File(txt_file_path))
                 os.remove(txt_file_path)
-                new_log = str(msg_send_channel) + "/" + str(client.user) + ":\n" + "由於訊息長度過長，因此改以文字檔方式呈現。" + "\n\n"
+                new_log = str(msg_send_channel) + "/" + str(
+                    client.user) + ":\n" + "由於訊息長度過長，因此改以文字檔方式呈現。" + "\n\n"
                 log_writter.write_log(new_log)
             else:
                 final_msg = "發生錯誤。錯誤內容如下：\n```" + str(e) + "```"
