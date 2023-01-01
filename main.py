@@ -334,15 +334,6 @@ async def on_message(message):  # 有訊息時
     msg_send_channel = ""
 
 
-@client.event
-async def on_member_join(guild, member):
-    if guild.system_channel:
-        welcome_msg = "歡迎<@" + str(member) + ">加入本伺服器！請稍待，直至伺服器管理員分配給你合適的身分組，即可與大家互動~🎵"
-        await guild.system_channel.send(welcome_msg)
-        new_log = str(guild.system_channel) + "/" + str(client.user) + ":\n" + str(welcome_msg) + "\n\n"
-        log_writter.write_log(new_log)
-
-
 # 取得TOKEN
 load_dotenv(dotenv_path=os.path.join(base_dir, "TOKEN.env"))
 TOKEN = str(os.getenv("TOKEN"))
