@@ -38,9 +38,14 @@ async def check_voice_channel():
                             await client.get_channel(channel.id).connect(self_mute=True, self_deaf=True)
                             msg = "加入語音頻道：" + server.name + "/" + channel.name
                             log_writter.write_log(msg)
+                            return "加入語音頻道：" + channel.name
                         except Exception as e:
                             msg = "加入語音頻道失敗：" + server.name + "/" + channel.name + "(" + str(e) + ")"
                             log_writter.write_log(msg)
+                            if str(e) == "Already connected to a voice channel.":
+                                return "已經連線至語音頻道。"
+                            else:
+                                return str(e)
 
 
 @client.event
