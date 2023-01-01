@@ -301,7 +301,7 @@ async def on_message(message):  # 有訊息時
                 owner = client.get_user(657519721138094080)
                 await owner.send("更新流程啟動。")
                 event = discord.Activity(type=discord.ActivityType.playing, name="更新中...")
-                await client.change_presence(status=discord.Status.dnd, activity=event)
+                await client.change_presence(status=discord.Status.do_not_disturb, activity=event)
                 update.update(os.getpid(), system())
             else:
                 final_msg.append("你無權使用此指令。")
