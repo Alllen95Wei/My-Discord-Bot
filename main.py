@@ -306,6 +306,8 @@ async def on_message(message):  # 有訊息時
                 final_msg.append("```" + str(e) + "```")
         elif msg_in[2:8] == "update":
             if message.author == client.get_user(657519721138094080):
+                owner = client.get_user(657519721138094080)
+                await owner.send("更新流程啟動。")
                 update.update(os.getpid(), system())
                 final_msg.append("已嘗試自GitHub取得更新，請稍候。")
             else:
