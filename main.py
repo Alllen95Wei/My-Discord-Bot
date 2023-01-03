@@ -62,7 +62,7 @@ async def on_ready():
 async def on_member_join(member):
     msg = "歡迎 **" + member.name + "** 加入 __" + member.guild.name + "__ ！"
     await member.guild.system_channel.send(msg)
-    log = str(member.guild.system_channel + "/" + str(client.user) + ":\n" + msg)
+    log = str(member.guild.system_channel) + "/" + str(client.user) + ":\n" + msg
     log_writter.write_log(log)
     new_member = await client.fetch_user(member.id)
     embed = discord.Embed(
