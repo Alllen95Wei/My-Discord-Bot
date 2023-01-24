@@ -2,6 +2,7 @@ import os
 import time
 from random import randint
 import discord
+from discord.ext import tasks
 import subprocess
 import shlex
 from platform import system
@@ -14,6 +15,7 @@ import log_writter
 from youtube_to_mp3 import main_dl
 import detect_pc_status as dps
 import update
+import user_exp
 
 intents = discord.Intents.all()
 intents.members = True
@@ -23,6 +25,7 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 
 
 async def check_voice_channel():
+    # 列出所有語音頻道
     voice_channel_lists = []
     for server in client.guilds:
         for channel in server.channels:
@@ -31,9 +34,11 @@ async def check_voice_channel():
                 print(server.name + "/" + channel.name)
                 members = channel.members
                 msg = ""
+                # 列出所有語音頻道的成員
                 for member in members:
                     print("   ⌊" + member.name)
-                    if member == client.get_user(657519721138094080) or member == client.get_user(885723595626676264):
+                    if member == client.get_user(885723595626676264) or member == client.get_user(657519721138094080):
+                        # 若找到Allen Music Bot或Allen Why，則嘗試加入該語音頻道
                         try:
                             await client.get_channel(channel.id).connect(self_mute=True, self_deaf=True)
                             msg = "加入語音頻道：" + server.name + "/" + channel.name
@@ -48,6 +53,19 @@ async def check_voice_channel():
                                 return str(e)
 
 
+@tasks.loop(seconds=10)
+async def give_voice_exp():  # 給予語音經驗
+    voice_channel_lists = []
+    for server in client.guilds:
+        for channel in server.channels:
+            if channel.type == discord.ChannelType.voice:
+                voice_channel_lists.append(channel)
+                members = channel.members
+                for member in members:
+                    if not member.bot:
+                        user_exp.add_exp(member.id, "voice", 1)
+
+
 @client.event
 async def on_ready():
     music = discord.Activity(type=discord.ActivityType.playing, name="修正完成！(狂喜)")
@@ -56,6 +74,12 @@ async def on_ready():
     log_writter.write_log("\n登入成功！\n目前登入身份：" +
                           str(client.user) + "\n以下為使用紀錄(只要開頭訊息有\"a!\"，則這則訊息和系統回應皆會被記錄)：\n\n")
     await check_voice_channel()
+    for guild in client.guilds:
+        for member in guild.members:
+            date = member.joined_at.strftime("%Y-%m-%d %H:%M:%S")
+            user_exp.set_join_date(member.id, date)
+            print(f"{member.name} 加入於 {date}")
+    await give_voice_exp.start()  # 開始偵測語音經驗
 
 
 @client.event
@@ -64,6 +88,7 @@ async def on_member_join(member):
     await member.guild.system_channel.send(msg)
     log = str(member.guild.system_channel) + "/" + str(client.user) + ":\n" + msg
     log_writter.write_log(log)
+    user_exp.set_join_date(member.id, member.joined_at.strftime("%Y-%m-%d %H:%M:%S"))
     new_member = await client.fetch_user(member.id)
     embed = discord.Embed(
         title="歡迎加入 " + member.guild.name + " ！",
@@ -96,6 +121,10 @@ testing = False
 async def on_message(message):  # 有訊息時
     global final_msg, msg_author, msg_is_file, msg_send_channel, testing
     msg_in = message.content
+    if not message.author.bot and isinstance(msg_in, str):
+        user_exp.add_exp(message.author.id, "text", len(msg_in))
+    elif not message.author.bot and isinstance(msg_in, discord.File):
+        user_exp.add_exp(message.author.id, "text", 1)
     if message.author == client.user:  # 排除自己的訊息，避免陷入無限循環
         return
     elif msg_in == "a!test" and message.author == client.get_user(657519721138094080):
