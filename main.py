@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import time
 from random import randint
 import discord
@@ -10,7 +11,6 @@ import requests
 
 import check_folder_size as cfs
 import change_autoplaylist as catpl
-from dotenv import load_dotenv
 import log_writter
 from youtube_to_mp3 import main_dl
 import detect_pc_status as dps
@@ -288,12 +288,6 @@ async def on_message(message):  # 有訊息時
             final_msg.append(act_msg)
         elif msg_in[2:6] == "ping":
             final_msg.append("目前延遲：" + str(round(client.latency * 1000)) + "ms")
-        elif msg_in[2:3] == "y":
-            if message.author == msg_author:
-                msg_author = ""
-                final_msg.append(cfs.clean_folder())
-            else:
-                final_msg.append("此回覆無效。")
         elif msg_in[2:5] == "cmd":
             if message.author == client.get_user(657519721138094080):
                 if len(msg_in) == 5:
