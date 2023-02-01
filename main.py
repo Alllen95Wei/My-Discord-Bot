@@ -317,8 +317,11 @@ async def on_message(message):  # 有訊息時
                 await message.guild.voice_client.disconnect()
                 final_msg.append("已嘗試離開語音頻道。")
             except Exception as e:
-                final_msg.append("中斷連接時發生問題。機器人目前是否有連接到語音頻道？")
-                final_msg.append("```" + str(e) + "```")
+                if str(e) == "'NoneType' object has no attribute 'disconnect'":
+                    final_msg.append("機器人目前沒有連接到語音頻道。")
+                else:
+                    final_msg.append("中斷連接時發生問題。")
+                    final_msg.append("```" + str(e) + "```")
         elif msg_in[2:8] == "update":
             if message.author == client.get_user(657519721138094080):
                 owner = client.get_user(657519721138094080)
