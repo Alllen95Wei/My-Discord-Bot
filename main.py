@@ -144,6 +144,24 @@ async def on_message(message):  # 有訊息時
     elif testing:
         return
     elif msg_in[:2] == "a!":
+        embed = discord.Embed(
+            title="感謝你的使用！",
+            description="你好，感謝你使用Allen Bot！\n提醒你，雖然本機器人即將被棄用，但是我們也準備好了替代品——<@1059102973998936137>，來繼承Allen Bot的所有功能！",
+            color=0x57c2ea)
+        embed.set_author(name="Allen Why", icon_url=client.get_user(657519721138094080).display_avatar)
+        embed.add_field(name="為何要棄用Allen Bot？", value="Allen Bot是我的第一個機器人，但是它的程式碼寫得很糟糕，毫無條理"
+                        "(你也能在[這裡](https://github.com/Alllen95Wei/My-Discord-Bot)"
+                        "看到這場噩夢🤯)；\n"
+                        "加上Discord發布了新版的「斜線指令」功能，讓使用機器人變得更加簡單。\n"
+                        "所以我們決定要重寫一個新的機器人，來取代Allen Bot。", inline=False)
+        embed.add_field(name="Allen Bot的替代品是什麼？", value="Allen Bot的替代品是<@1059102973998936137>，它的程式碼寫得"
+                        "比Allen Bot好多了，而且也支援所有Allen Bot的功能(甚至更多！)，更重要的是：支援斜線指令(超級重要)！", inline=False)
+        embed.add_field(name="那麼，Allen Bot會怎麼樣？", value="在<@1059102973998936137>的設計完成後，"
+                        "Allen Bot的原始碼將會於GitHub封存，並轉為read-only。", inline=False)
+        embed.add_field(name="我應該如何使用新版的機器人？", value="請使用</help:1069227660816957491>來取得協助。",
+                        inline=False)
+        embed.set_footer(text="Allen Bot停止服務通知")
+        await message.channel.send(embed=embed)
         use_log = str(message.channel) + "/" + str(message.author) + ":\n" + msg_in + "\n\n"
         log_writter.write_log(use_log)
         if len(msg_in) == 2:
